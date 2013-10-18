@@ -58,7 +58,5 @@ public class Gui extends JFrame {
 			setJMenuBar(menuBar);
 			
 
-			
-			 
 		}
 }
