@@ -28,7 +28,6 @@ public class Gui extends JFrame {
 		    setExtendedState(JFrame.MAXIMIZED_BOTH);
 			setTitle("Project");
 			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			setVisible(true);
 			System.out.println("Gui Started");
 		}
 		
@@ -46,6 +45,13 @@ public class Gui extends JFrame {
 		            }
 		        });
 		        
+		        newCase.addActionListener(new ActionListener() {
+		            public void actionPerformed(ActionEvent event) {	            	
+		            	CaseClass caseClass = new CaseClass();
+		            	caseClass.NewCase();
+		            }
+		        });
+		        
 			file.add(newCase);
 			file.add(exitClose);
 			menuBar.add(file);
@@ -59,4 +65,5 @@ public class Gui extends JFrame {
 			
 
 		}
+
 }
