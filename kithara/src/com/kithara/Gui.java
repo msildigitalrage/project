@@ -10,12 +10,12 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
-public class Gui extends JFrame {
+public class Gui {
 	/**
 	 Graphical User Interface
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	JFrame mainFrame = new JFrame();
 	
 	public Gui() {
 		createFrame();
@@ -23,15 +23,17 @@ public class Gui extends JFrame {
 		
 	}
 		void createFrame(){
+			
 		    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		    setBounds(0,0,screenSize.width, screenSize.height);
-		    setExtendedState(JFrame.MAXIMIZED_BOTH);
-			setTitle("Project");
-			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		    mainFrame.setBounds(0,0,screenSize.width, screenSize.height);
+		    mainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		    mainFrame.setTitle("Project");
+		    mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			System.out.println("Gui Started");
 		}
 		
 		void createMenu(){
+			
 			
 			JMenuBar menuBar = new JMenuBar();
 			
@@ -46,7 +48,7 @@ public class Gui extends JFrame {
 		        });
 		        
 		        newCase.addActionListener(new ActionListener() {
-		            public void actionPerformed(ActionEvent event) {	            	
+		            public void actionPerformed(ActionEvent event) {		
 		            	CaseClass caseClass = new CaseClass();
 		            	caseClass.NewCase();
 		            }
@@ -61,7 +63,7 @@ public class Gui extends JFrame {
 			help.add(about);
 			menuBar.add(help);
 			
-			setJMenuBar(menuBar);
+			mainFrame.setJMenuBar(menuBar);
 			
 
 		}

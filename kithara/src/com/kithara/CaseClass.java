@@ -1,17 +1,18 @@
 package com.kithara;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-
 import javax.swing.JButton;
-import javax.swing.JFrame;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -20,82 +21,87 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 public class CaseClass {
-
+	
+	JDialog jDialog = new JDialog();
+	
 	public void NewCase() {
-		System.out.println("New Case");
-		  final JFrame jFrame = new JFrame("New Case");
-	        jFrame.setResizable(false);
+		jDialog.setModal(true);
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		jDialog.setBounds((screenSize.width / 2) - (200/ 2), (screenSize.height / 2) - (200 / 2), 200, 200);
+		jDialog.setResizable(false);
+		jDialog.setTitle("New Case");
+		
+		JPanel descPanel = new JPanel(new GridBagLayout());
+        JPanel namePanel = new JPanel(new GridBagLayout());
+        JPanel okPanel = new JPanel(new GridBagLayout());
+        JLabel descLabel = new JLabel("Description of Case");
+        final JTextArea descText = new JTextArea(10, 10);
+        JScrollPane scrollPanel = new JScrollPane(descText);
+        JLabel labelnameCase = new JLabel("Name");
+        final JTextField textNameCase = new JTextField(10);
+        JButton buttonOk = new JButton("OK");
+
+	        GridBagConstraints gc = new GridBagConstraints();
+	        gc.fill = GridBagConstraints.HORIZONTAL;
+	        gc.weightx = 1;
+	        gc.gridx = 0;
+	        gc.gridy = 0;
+	        gc.ipadx = 10;
+	        namePanel.add(labelnameCase, gc);
+
+	        gc.gridx = 1;
+	        gc.gridy = 0;
+	        namePanel.add(textNameCase, gc);
+        
+	        GridBagConstraints gc1 = new GridBagConstraints();
+
+	        gc1.fill = GridBagConstraints.HORIZONTAL;
+	        gc1.weightx = 1;
+	        gc1.gridx = 0;
+	        gc1.gridy = 0;
+	        descPanel.add(descLabel, gc1);
+
+	        gc1.gridx = 0;
+	        gc1.gridy = 1;
+	        descPanel.add(scrollPanel, gc1);
 	        
-	        JPanel descPanel = new JPanel(new GridBagLayout());
-	        JPanel namePanel = new JPanel(new GridBagLayout());
-	        JPanel okPanel = new JPanel(new GridBagLayout());
-	        JLabel descLabel = new JLabel("Description of Case");
-	        final JTextArea descText = new JTextArea(10, 10);
-	        JScrollPane scrollPanel = new JScrollPane(descText);
-	        JLabel labelnameCase = new JLabel("Name");
-	        final JTextField textNameCase = new JTextField(10);
-	        JButton buttonOk = new JButton("OK");
-
-		        GridBagConstraints gc = new GridBagConstraints();
-		        gc.fill = GridBagConstraints.HORIZONTAL;
-		        gc.weightx = 1;
-		        gc.gridx = 0;
-		        gc.gridy = 0;
-		        gc.ipadx = 10;
-		        namePanel.add(labelnameCase, gc);
-	
-		        gc.gridx = 1;
-		        gc.gridy = 0;
-		        namePanel.add(textNameCase, gc);
+	        GridBagConstraints gc2 = new GridBagConstraints();
 	        
-		        GridBagConstraints gc1 = new GridBagConstraints();
-	
-		        gc1.fill = GridBagConstraints.HORIZONTAL;
-		        gc1.weightx = 1;
-		        gc1.gridx = 0;
-		        gc1.gridy = 0;
-		        descPanel.add(descLabel, gc1);
-	
-		        gc1.gridx = 0;
-		        gc1.gridy = 1;
-		        descPanel.add(scrollPanel, gc1);
-		        
-		        GridBagConstraints gc2 = new GridBagConstraints();
-		        
-		        gc2.fill = GridBagConstraints.HORIZONTAL;
-		        gc2.gridx = 1;
-		        gc2.gridy = 1;
-		        okPanel.add(buttonOk, gc2);
+	        gc2.fill = GridBagConstraints.HORIZONTAL;
+	        gc2.gridx = 1;
+	        gc2.gridy = 1;
+	        okPanel.add(buttonOk, gc2);
 
-			        buttonOk.addActionListener(new ActionListener() {
-			            @Override
-			            public void actionPerformed(ActionEvent ev) {
-			            	
-			            	if(textNameCase.getText().isEmpty() || descText.getText().isEmpty()){
-			            		JOptionPane.showMessageDialog(null,"Please, fill all the fields..","Try Again",JOptionPane.OK_OPTION);
-			            		System.out.println("Didn't Fill Name or Description");
-			            	}else{
-			            		String nameFolder = textNameCase.getText().toString();
-			            		String descCase = descText.getText().toString();
-			            		createFolderCase(nameFolder,descCase);
-			            		jFrame.setVisible(false);
-			            		jFrame.dispose();
-			            		System.out.println("New Case, Folder Created");
-			            	}
-			                
-			            }
-			        });
+		        buttonOk.addActionListener(new ActionListener() {
+		            @Override
+		            public void actionPerformed(ActionEvent ev) {
+		            	
+		            	if(textNameCase.getText().isEmpty() || descText.getText().isEmpty()){
+		            		JOptionPane.showMessageDialog(null,"Please, fill all the fields..","Try Again",JOptionPane.OK_OPTION);
+		            		System.out.println("Didn't Fill Name or Description");
+		            	}else{
+		            		String nameFolder = textNameCase.getText().toString();
+		            		String descCase = descText.getText().toString();
+		            		createFolderCase(nameFolder,descCase);
+		            		jDialog.setVisible(false);
+		            		jDialog.dispose();
+		            		System.out.println("New Case, Folder Created");
+		            		
+		            	}
+		                
+		            }
+		        });
 
-	        jFrame.add(namePanel, BorderLayout.NORTH);
-	        jFrame.add(descPanel, BorderLayout.CENTER);
-	        jFrame.add(okPanel, BorderLayout.SOUTH);
+		        jDialog.add(namePanel, BorderLayout.NORTH);
+		        jDialog.add(descPanel, BorderLayout.CENTER);
+		        jDialog.add(okPanel, BorderLayout.SOUTH);
 
-	        //pack frame (size JFrame to match preferred sizes of added components and set visible
-	        jFrame.pack();
-	        jFrame.setLocationRelativeTo(null);
-	        jFrame.setVisible(true);
-		    
-
+        //pack frame (size JFrame to match preferred sizes of added components and set visible
+		        jDialog.pack();
+		        jDialog.setLocationRelativeTo(null);
+		        jDialog.setVisible(true);
+		
+		
 	}
 
 	private void createFolderCase(String nameFolder, String descCase ) {
@@ -115,6 +121,7 @@ public class CaseClass {
 		    	   bufferWritter.write("Case Name: "+nameFolder+"\nDescription: " + descCase + "\nCase ID: "+ System.currentTimeMillis());
 		    	   bufferWritter.close();
 		    	   System.out.println("Write to Log File Completed");
+		    	   
 		       }catch(IOException b){
 		    	   b.printStackTrace();
 		       }
