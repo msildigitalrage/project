@@ -7,10 +7,13 @@ import java.awt.GridBagLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -23,7 +26,16 @@ import javax.swing.JTextField;
 public class CaseClass {
 	
 	JDialog jDialog = new JDialog();
-	
+	JPanel descPanel = new JPanel(new GridBagLayout());
+    JPanel namePanel = new JPanel(new GridBagLayout());
+    JPanel okPanel = new JPanel(new GridBagLayout());
+    JLabel descLabel = new JLabel("Description of Case");
+    final JTextArea descText = new JTextArea(10, 10);
+    JScrollPane scrollPanel = new JScrollPane(descText);
+    JLabel labelnameCase = new JLabel("Name");
+    final JTextField textNameCase = new JTextField(10);
+    JButton buttonOk = new JButton("OK");
+    
 	public void NewCase() {
 		jDialog.setModal(true);
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -31,15 +43,7 @@ public class CaseClass {
 		jDialog.setResizable(false);
 		jDialog.setTitle("New Case");
 		
-		JPanel descPanel = new JPanel(new GridBagLayout());
-        JPanel namePanel = new JPanel(new GridBagLayout());
-        JPanel okPanel = new JPanel(new GridBagLayout());
-        JLabel descLabel = new JLabel("Description of Case");
-        final JTextArea descText = new JTextArea(10, 10);
-        JScrollPane scrollPanel = new JScrollPane(descText);
-        JLabel labelnameCase = new JLabel("Name");
-        final JTextField textNameCase = new JTextField(10);
-        JButton buttonOk = new JButton("OK");
+
 
 	        GridBagConstraints gc = new GridBagConstraints();
 	        gc.fill = GridBagConstraints.HORIZONTAL;
@@ -83,10 +87,11 @@ public class CaseClass {
 		            		String nameFolder = textNameCase.getText().toString();
 		            		String descCase = descText.getText().toString();
 		            		createFolderCase(nameFolder,descCase);
+		            		//loadImage.setEnabled(true);
 		            		jDialog.setVisible(false);
 		            		jDialog.dispose();
 		            		System.out.println("New Case, Folder Created");
-		            		
+		            		Gui.loadImage.setEnabled(true);
 		            	}
 		                
 		            }
@@ -105,6 +110,23 @@ public class CaseClass {
 	}
 
 	private void createFolderCase(String nameFolder, String descCase ) {
+		String path=null;
+		  BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+		try{
+			 String pwdcmd = "pwd";
+			
+			 Process p= Runtime.getRuntime().exec(pwdcmd);
+			 p.waitFor();
+			 reader=new BufferedReader(new InputStreamReader(p.getInputStream()));
+			 path=reader.readLine();
+		       
+		}
+		catch(IOException e1){
+			
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		File theDir = new File(nameFolder);
 			//System.currentTimeMillis()
 		  if (!theDir.exists()) {
@@ -116,7 +138,7 @@ public class CaseClass {
 				logFile.createNewFile();
 			} catch (IOException e) {}
 		       try{
-		    	   FileWriter fw = new FileWriter("/home/iceman/git/kithara/kithara/"+nameFolder+"/log.txt",true);//true is for append-noNeed
+		    	   FileWriter fw = new FileWriter(path + "/" +nameFolder+"/log.txt",true);//true is for append-noNeed
 		    	   BufferedWriter bufferWritter = new BufferedWriter(fw);
 		    	   bufferWritter.write("Case Name: "+nameFolder+"\nDescription: " + descCase + "\nCase ID: "+ System.currentTimeMillis());
 		    	   bufferWritter.close();

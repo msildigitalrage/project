@@ -16,6 +16,11 @@ public class Gui {
 	 * 
 	 */
 	JFrame mainFrame = new JFrame();
+	JMenuBar menuBar = new JMenuBar();
+	JMenu file = new JMenu("File");
+	JMenuItem newCase = new JMenuItem("New Case");
+	public static JMenuItem loadImage = new JMenuItem("Load Image");
+	final JMenuItem exitClose = new JMenuItem("Exit");
 	
 	public Gui() {
 		createFrame();
@@ -33,28 +38,29 @@ public class Gui {
 		}
 		
 		void createMenu(){
-			
-			
-			JMenuBar menuBar = new JMenuBar();
-			
-			JMenu file = new JMenu("File");
-			JMenuItem newCase = new JMenuItem("New Case");
-			JMenuItem exitClose = new JMenuItem("Exit");
-			
+			loadImage.setEnabled(false);
+	        newCase.addActionListener(new ActionListener() {
+	            public void actionPerformed(ActionEvent event) {		
+	            	CaseClass caseClass = new CaseClass();
+	            	caseClass.NewCase();
+	            }
+	        });
+	        
+	        loadImage.addActionListener(new ActionListener() {
+	            public void actionPerformed(ActionEvent event) {		
+	            	
+	            }
+	        });
 		        exitClose.addActionListener(new ActionListener() {
 		            public void actionPerformed(ActionEvent event) {
 		                System.exit(0);
 		            }
 		        });
 		        
-		        newCase.addActionListener(new ActionListener() {
-		            public void actionPerformed(ActionEvent event) {		
-		            	CaseClass caseClass = new CaseClass();
-		            	caseClass.NewCase();
-		            }
-		        });
+
 		        
 			file.add(newCase);
+			file.add(loadImage);
 			file.add(exitClose);
 			menuBar.add(file);
 			
