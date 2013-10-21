@@ -36,15 +36,15 @@ public class CaseClass {
     final JTextField textNameCase = new JTextField(10);
     JButton buttonOk = new JButton("OK");
     
-	public void NewCase() {
+	public void newCase() {
 		jDialog.setModal(true);
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		jDialog.setBounds((screenSize.width / 2) - (200/ 2), (screenSize.height / 2) - (200 / 2), 200, 200);
 		jDialog.setResizable(false);
 		jDialog.setTitle("New Case");
+		jDialog.setFocusable(true);
+		jDialog.requestFocus();
 		
-
-
 	        GridBagConstraints gc = new GridBagConstraints();
 	        gc.fill = GridBagConstraints.HORIZONTAL;
 	        gc.weightx = 1;
@@ -87,7 +87,6 @@ public class CaseClass {
 		            		String nameFolder = textNameCase.getText().toString();
 		            		String descCase = descText.getText().toString();
 		            		createFolderCase(nameFolder,descCase);
-		            		//loadImage.setEnabled(true);
 		            		jDialog.setVisible(false);
 		            		jDialog.dispose();
 		            		System.out.println("New Case, Folder Created");
@@ -100,8 +99,8 @@ public class CaseClass {
 		        jDialog.add(namePanel, BorderLayout.NORTH);
 		        jDialog.add(descPanel, BorderLayout.CENTER);
 		        jDialog.add(okPanel, BorderLayout.SOUTH);
-
-        //pack frame (size JFrame to match preferred sizes of added components and set visible
+		        jDialog.setLocationByPlatform(false);
+		        
 		        jDialog.pack();
 		        jDialog.setLocationRelativeTo(null);
 		        jDialog.setVisible(true);
@@ -132,7 +131,7 @@ public class CaseClass {
 		  if (!theDir.exists()) {
 		    boolean result = theDir.mkdir();  	
 		     if(result) {    
-		       System.out.println("directory folder named "+nameFolder+"created");  
+		       System.out.println("directory folder named "+nameFolder+" created");  
 		       File logFile = new File("/"+nameFolder+"/log.txt");
 		       try {
 				logFile.createNewFile();
@@ -142,7 +141,7 @@ public class CaseClass {
 		    	   BufferedWriter bufferWritter = new BufferedWriter(fw);
 		    	   bufferWritter.write("Case Name: "+nameFolder+"\nDescription: " + descCase + "\nCase ID: "+ System.currentTimeMillis());
 		    	   bufferWritter.close();
-		    	   System.out.println("Write to Log File Completed");
+		    	   //System.out.println("Write to Log File Completed");
 		    	   
 		       }catch(IOException b){
 		    	   b.printStackTrace();
@@ -150,7 +149,7 @@ public class CaseClass {
 		     }
 		  }else{//if exists, choose other name
        		JOptionPane.showMessageDialog(null,"Choose different name for the Case","Case Exists",JOptionPane.OK_OPTION);
-       		NewCase();
+       		newCase();
 		     }	
 	}
 
