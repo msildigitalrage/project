@@ -8,6 +8,7 @@ public class Main {
 		Gui gui = new Gui();
 		gui.mainFrame.setVisible(true);
 		
+		
 	}
 
 }

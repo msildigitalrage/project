@@ -3,23 +3,20 @@ package com.kithara;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Panel;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
 
 public class Gui {
-	/**
-	 Graphical User Interface
-	 * 
-	 */
+
 	public static JFrame mainFrame = new JFrame();
 	JMenuBar menuBar = new JMenuBar();
 	JMenu file = new JMenu("File");
@@ -27,8 +24,12 @@ public class Gui {
 	JMenuItem openCase = new JMenuItem("Open Case");
 	public static JMenuItem loadImage = new JMenuItem("Load Image");
 	final JMenuItem exitClose = new JMenuItem("Exit");
-	Panel leftPanel = new Panel();
-	Panel centerPanel = new Panel();
+	public static Panel leftPanel = new Panel();
+
+    
+    //JScrollBar vbar=new JScrollBar(JScrollBar.HORIZONTAL, 30, 40, 0, 500);
+    
+	public static Panel centerPanel = new Panel();
 	Panel botPanel = new Panel();
 	
 	
@@ -36,6 +37,7 @@ public class Gui {
 		createFrame();
 		createMenu();
 		createPanels();
+		createTreeView();
 		
 	}
 		void createFrame(){
@@ -50,7 +52,7 @@ public class Gui {
 		}
 		
 		void createMenu(){
-			loadImage.setEnabled(false);
+			//loadImage.setEnabled(false);
 	        newCase.addActionListener(new ActionListener() {
 	            public void actionPerformed(ActionEvent event) {		
 	            	CaseClass caseClass = new CaseClass();
@@ -60,14 +62,14 @@ public class Gui {
 	        
 	        openCase.addActionListener(new ActionListener() {
 	            public void actionPerformed(ActionEvent event) {		
-	            	LoadImage loadImage = new LoadImage();
-	            	loadImage.newMount();
+	            	//open reeeeeeeeeeee
 	            }
 	        });
 	        
 	        loadImage.addActionListener(new ActionListener() {
 	            public void actionPerformed(ActionEvent event) {		
-	            	//mount 
+	            	LoadImage loadImage = new LoadImage();
+	            	//loadImage.setVisible(true);
 	            }
 	        });
 		        exitClose.addActionListener(new ActionListener() {
@@ -97,6 +99,7 @@ public class Gui {
 			mainFrame.add(centerPanel,BorderLayout.CENTER);
 			mainFrame.add(botPanel,BorderLayout.SOUTH);
 			Dimension screenSize = mainFrame.getBounds().getSize();
+			//leftPanel.add(vbar);
 			leftPanel.setBackground(Color.WHITE);
 			leftPanel.setPreferredSize(new Dimension((int) (screenSize.width*0.25),(int) (screenSize.height*0.75)));
 			centerPanel.setBackground(Color.lightGray);
@@ -104,5 +107,8 @@ public class Gui {
 			botPanel.setBackground(Color.gray);
 			botPanel.setPreferredSize(new Dimension(screenSize.width,(int) (screenSize.height*0.25)));
 		}
-}
 		
+		void createTreeView(){
+			new TreeView("/home/");//Give the Path of LoadesImage
+		}
+}

@@ -1,6 +1,7 @@
 package com.kithara;
 
 import java.awt.BorderLayout;
+import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -38,6 +39,7 @@ public class CaseClass {
     
 	public void newCase() {
 		jDialog.setModal(true);
+		//jDialog.setModalityType(ModalityType.DOCUMENT_MODAL);
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		jDialog.setBounds((screenSize.width / 2) - (200/ 2), (screenSize.height / 2) - (200 / 2), 200, 200);
 		jDialog.setResizable(false);
@@ -99,8 +101,7 @@ public class CaseClass {
 		        jDialog.add(namePanel, BorderLayout.NORTH);
 		        jDialog.add(descPanel, BorderLayout.CENTER);
 		        jDialog.add(okPanel, BorderLayout.SOUTH);
-		        jDialog.setLocationByPlatform(false);
-		        
+	        
 		        jDialog.pack();
 		        jDialog.setLocationRelativeTo(null);
 		        jDialog.setVisible(true);
