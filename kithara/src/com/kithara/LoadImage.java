@@ -1,71 +1,140 @@
 package com.kithara;
 
+ 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Enumeration;
 
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
+import javax.swing.*;
 
-public class LoadImage  {
-
-    public LoadImage() {
-        initUI();
-    }
-    
-
-    public void initUI() {
-    
-       final JDialog dialog = new JDialog();
-       JPanel panel = new JPanel();
-       panel.setBounds(40, 40, 500, 500);
-       dialog.add(panel);
-       JButton mountButton = new JButton("Mount");
-       
-       final JTextArea path = new JTextArea("",2,10);
-       path.setVisible(true);
-       
-       mountButton.addActionListener(new ActionListener() {
-           @Override
-           public void actionPerformed(ActionEvent event) {
-        
-			String sas=  promptForFolder();      	 
-        	path.setText(sas);
-               
-          }
-       });
-       
-       JButton ok = new JButton("ok");
-       ok.addActionListener(new ActionListener() {
-		
-		@Override
-		public void actionPerformed(ActionEvent event) {
-			// TODO Auto-generated method stub
-			 mount(path, dialog);
-			
-		}
-	});
-       
-      
-
-       panel.add(mountButton);
-       panel.add(path);
-       panel.add(ok,2);
+import static javax.swing.GroupLayout.Alignment.*;
  
-       dialog.setModal(true);
-       dialog.setTitle("mount a Device");
-       dialog.setSize(800, 800);
-       dialog.setLocationRelativeTo(null);
-       dialog.setVisible(true);
+public class LoadImage  {
+	public String where_log;
+	
+    public LoadImage() {
+    	
+    	
+    	final JDialog dialog = new JDialog();
+    	JPanel panel = new JPanel();
+    	
+    	
+    	
+        JLabel label = new JLabel("Path mounted:");;
+        final JTextField path = new JTextField();
+        final ButtonGroup fileSystem = new ButtonGroup();
+        JRadioButton vfatBox = new JRadioButton("ext3");
+        JRadioButton ext4Box = new JRadioButton("ext4");
+        JRadioButton ntfsBox = new JRadioButton("ntfs");
+        JRadioButton ext3Box = new JRadioButton("vfat");
+        fileSystem.add(ext3Box);
+        fileSystem.add(ext4Box);
+        fileSystem.add(ntfsBox);
+        fileSystem.add(vfatBox);
+        
+       
+        
+        
+        
+        
+        JButton mountButton = new JButton("Mount");
+        
+        mountButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+         
+ 			String sas=  promptForFolder();      	 
+         	path.setText(sas);
+                
+           }
+        });
+        
+        JButton ok = new JButton("ok");
+        ok.addActionListener(new ActionListener() {
+    		
+        	
+        	
+    		@Override
+    		public void actionPerformed(ActionEvent event) {
+    			// TODO Auto-generated method stub
+    			 mount(path , dialog, fileSystem);
+    			 
+    	         
+    			
+    		}
+    	});
+        
+ 
+        
+        panel.add(label);
+        panel.add(path);
+        panel.add(vfatBox);
+        panel.add(ext3Box);
+        panel.add(ext4Box);
+        panel.add(ntfsBox);
+        panel.add(mountButton);
+        panel.add(ok);
+        panel.setVisible(true);
+        
+        vfatBox.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        ext4Box.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        ntfsBox.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        ext3Box.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+ 
+        GroupLayout layout = new GroupLayout(panel);
+        panel.setLayout(layout);
+        layout.setAutoCreateGaps(true);
+        layout.setAutoCreateContainerGaps(true);
+ 
+        layout.setHorizontalGroup(layout.createSequentialGroup()
+            .addComponent(label)
+            .addGroup(layout.createParallelGroup(LEADING)
+                .addComponent(path)
+                .addGroup(layout.createSequentialGroup()
+                    .addGroup(layout.createParallelGroup(LEADING)
+                        .addComponent(vfatBox)
+                        .addComponent(ntfsBox))
+                    .addGroup(layout.createParallelGroup(LEADING)
+                        .addComponent(ext4Box)
+                        .addComponent(ext3Box))))
+            .addGroup(layout.createParallelGroup(LEADING)
+                .addComponent(mountButton)
+                .addComponent(ok))
+        );
+        
+        layout.linkSize(SwingConstants.HORIZONTAL, mountButton, ok);
+ 
+        layout.setVerticalGroup(layout.createSequentialGroup()
+            .addGroup(layout.createParallelGroup(BASELINE)
+                .addComponent(label)
+                .addComponent(path)
+                .addComponent(mountButton))
+            .addGroup(layout.createParallelGroup(LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGroup(layout.createParallelGroup(BASELINE)
+                        .addComponent(vfatBox)
+                        .addComponent(ext4Box))
+                    .addGroup(layout.createParallelGroup(BASELINE)
+                        .addComponent(ntfsBox)
+                        .addComponent(ext3Box)))
+                .addComponent(ok))
+        );
+ 
+        dialog.add(panel);
+        dialog.setVisible(true);
+        dialog.setTitle("Find");
+        dialog.pack();
+       // dialog.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        
     }
-
-   //  see if something is mounted 
+    
+    
+//  see if something is mounted 
    public boolean isMounted(String mount_path) {
 	   
 	   int flag =0;
@@ -127,13 +196,19 @@ public class LoadImage  {
     
     
     // mount function
-    public void mount ( JTextArea path, JDialog dialog){
+    public void mount (JTextField path, JDialog dialog, ButtonGroup fileSystem){
+    	
     	String mountFile;
-    	String mount_path = "/mnt"+System.currentTimeMillis();
+    	String filesystem1 = getSelectedButtonText(fileSystem);
+    	
+    	System.out.println(filesystem1);
+    	String mount_path = "/mnt"; //+System.currentTimeMillis();
     	System.out.println(mount_path);
 		mountFile=path.getText();
-		if(mountFile.equals("")){
-			JOptionPane.showMessageDialog(null, "you have to fill the mount field");
+		
+		
+		if(mountFile.equals("") || filesystem1.equals("")){
+			JOptionPane.showMessageDialog(null, "you have to fill  mounted file and choose file system");
 		}
 		else{
 			try{
@@ -143,24 +218,50 @@ public class LoadImage  {
 				  catch(IOException | InterruptedException e1){
 				  }
 			  try{
-			  Process p1= Runtime.getRuntime().exec( "sudo mount -t ext4 "+mountFile+" "+mount_path);
+			  Process p1= Runtime.getRuntime().exec( "sudo mount -t "+filesystem1+" "+mountFile+" "+mount_path);
 			  p1.waitFor();
+			  System.out.println("kasiarakos"+where_log);
+			  FileWriter fw = new FileWriter(where_log,true);//true is for append-noNeed
+	   	      BufferedWriter bufferWritter = new BufferedWriter(fw);
+	   	      bufferWritter.write("\nMount point: "+mount_path+"\tFile system: "+filesystem1+"\t mounted file"+ mountFile);
+	   	      bufferWritter.close();
 			  }
 			  catch(IOException | InterruptedException e1){
 			  }
 			if(isMounted(mount_path)==true){   
 		  JOptionPane.showMessageDialog(null, "mount was held with success");
-	      dialog.setVisible(false);
-     	  dialog.dispose();
+		  
+		 
+		  // container.setVisible(false);
+     	 // container.dispose();
 			}
 			else{
-				JOptionPane.showMessageDialog(null, "this file it is not an image file");
+				JOptionPane.showMessageDialog(null, "this file it is not an image file or the file system you choose is wrong");
 			}
 		}
 		
     }
     
     
+    public String getSelectedButtonText(ButtonGroup buttonGroup) {
+        for (Enumeration<AbstractButton> buttons = buttonGroup.getElements(); buttons.hasMoreElements();) {
+            AbstractButton button = buttons.nextElement();
+
+            if (button.isSelected()) {
+                return button.getText();
+            }
+        }
+
+        return null;
+        
+    }
+
     
-    
+  public void set_where_log(String where_log_s){
+    	
+	 where_log = where_log_s;
+    }
+  
+  
+ 
 }

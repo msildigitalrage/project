@@ -2,11 +2,6 @@ package com.kithara;
 import java.io.File;
 import java.util.Iterator;
 import java.util.Vector;
-import javax.swing.JFrame;
-import javax.swing.JScrollBar;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTextArea;
 import javax.swing.JTree;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
@@ -16,39 +11,33 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
  
 public class TreeView {
-	private JTree fileTree;
+	public static JTree fileTree;
 	private FileSystemModel fileSystemModel;
-	private JTextArea fileDetailsTextArea = new JTextArea();
- 
+	//private JTextArea fileDetailsTextArea = new JTextArea();
+
   public TreeView(String directory) {
-    //super("File System");
-    fileDetailsTextArea.setEditable(false);//deksi komati
+
+  //  fileDetailsTextArea.setEditable(false);//deksi komati
+   // fileDetailsTextArea.setBorder(BorderFactory.createLineBorder(Color.black));
     fileSystemModel = new FileSystemModel(new File(directory));
     fileTree = new JTree(fileSystemModel);
-    fileTree.setEditable(true);
+    fileTree.setEditable(false);//was true
     fileTree.addTreeSelectionListener(new TreeSelectionListener() {
       public void valueChanged(TreeSelectionEvent event) {
         File file = (File) fileTree.getLastSelectedPathComponent();
-        fileDetailsTextArea.setText(getFileDetails(file));
+    //    fileDetailsTextArea.setText(getFileDetails(file));
+        	Gui.detailsFileLbl.setText(getFileDetails(file));
       }
     });
-   // JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, new JScrollPane(
-  //     fileTree), new JScrollPane(fileDetailsTextArea));
-   JScrollPane splitPane = new JScrollPane(fileTree);
-    //JScrollBar scrollTree = new JScrollBar(Gui.leftPanel.add(fileTree));
-    //JScrollPane thePane = new JScrollPane(fileTree);
-    //container.add(thePane);
-    Gui.leftPanel.add(splitPane);
-    Gui.centerPanel.add(fileDetailsTextArea);
+
+    Gui.leftPanel.add(fileTree);	
   }
- 
-  private String getFileDetails(File file) {
+  
+  public String getFileDetails(File file) {
     if (file == null)
       return "";
     StringBuffer buffer = new StringBuffer();
-    buffer.append("Name: " + file.getName() + "\n");
-    buffer.append("Path: " + file.getPath() + "\n");
-    buffer.append("Size: " + file.length() + "\n");
+    buffer.append(" >> " + file.getPath());
     return buffer.toString();
   }
 

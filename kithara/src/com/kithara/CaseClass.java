@@ -1,7 +1,6 @@
 package com.kithara;
 
 import java.awt.BorderLayout;
-import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -26,6 +25,7 @@ import javax.swing.JTextField;
 
 public class CaseClass {
 	
+	public String where_log = "null";
 	JDialog jDialog = new JDialog();
 	JPanel descPanel = new JPanel(new GridBagLayout());
     JPanel namePanel = new JPanel(new GridBagLayout());
@@ -101,7 +101,8 @@ public class CaseClass {
 		        jDialog.add(namePanel, BorderLayout.NORTH);
 		        jDialog.add(descPanel, BorderLayout.CENTER);
 		        jDialog.add(okPanel, BorderLayout.SOUTH);
-	        
+		        
+		        
 		        jDialog.pack();
 		        jDialog.setLocationRelativeTo(null);
 		        jDialog.setVisible(true);
@@ -138,6 +139,7 @@ public class CaseClass {
 				logFile.createNewFile();
 			} catch (IOException e) {}
 		       try{
+		    	   where_log = path + "/" +nameFolder+"/log.txt";
 		    	   FileWriter fw = new FileWriter(path + "/" +nameFolder+"/log.txt",true);//true is for append-noNeed
 		    	   BufferedWriter bufferWritter = new BufferedWriter(fw);
 		    	   bufferWritter.write("Case Name: "+nameFolder+"\nDescription: " + descCase + "\nCase ID: "+ System.currentTimeMillis());
@@ -153,5 +155,8 @@ public class CaseClass {
        		newCase();
 		     }	
 	}
-
+	
+	public String get_where_log(){
+		return where_log;
+	}
 }
