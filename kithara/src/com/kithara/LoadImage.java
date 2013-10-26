@@ -1,6 +1,5 @@
 package com.kithara;
 
- 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -9,17 +8,16 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Enumeration;
-
 import javax.swing.*;
-
 import static javax.swing.GroupLayout.Alignment.*;
  
 public class LoadImage  {
+	public static boolean loadedImage = false;
 	public String where_log;
-	
+	public String case_name;
+	public String file_name;
+	public String fileLoad;
     public LoadImage() {
-    	
-    	
     	final JDialog dialog = new JDialog();
     	JPanel panel = new JPanel();
     	
@@ -37,10 +35,6 @@ public class LoadImage  {
         fileSystem.add(ntfsBox);
         fileSystem.add(vfatBox);
         
-       
-        
-        
-        
         
         JButton mountButton = new JButton("Mount");
         
@@ -56,15 +50,11 @@ public class LoadImage  {
         
         JButton ok = new JButton("ok");
         ok.addActionListener(new ActionListener() {
-    		
-        	
-        	
+    	
     		@Override
     		public void actionPerformed(ActionEvent event) {
     			// TODO Auto-generated method stub
     			 mount(path , dialog, fileSystem);
-    			 
-    	         
     			
     		}
     	});
@@ -135,7 +125,7 @@ public class LoadImage  {
     
     
 //  see if something is mounted 
-   public boolean isMounted(String mount_path) {
+   public static boolean isMounted(String mount_path) {
 	   
 	   int flag =0;
 	   try{
@@ -146,7 +136,6 @@ public class LoadImage  {
 			  String line="";
 			  
 			  line=reader.readLine();
-			  System.out.println(line);
 			  if(line == null || line==" "){
 					flag = 0;
 			  }
@@ -158,15 +147,14 @@ public class LoadImage  {
 		  catch(IOException | InterruptedException e1){
 			  
 		  }
+	   
+	   
 	   if(flag == 0 ){
-		   return false;
-	   }else
-	   { return true;
+			   return false;
+		   }else
+		   { return true;
+		   }
 	   }
-	   }
-   
-    
-   
    
     
     public String promptForFolder(  )
@@ -184,13 +172,6 @@ public class LoadImage  {
     
     
     
-    //umount function
-    public void umount(String mnt){
-    	
-    }
-    
-    
-    
     
     
     
@@ -198,42 +179,63 @@ public class LoadImage  {
     // mount function
     public void mount (JTextField path, JDialog dialog, ButtonGroup fileSystem){
     	
-    	String mountFile;
-    	String filesystem1 = getSelectedButtonText(fileSystem);
     	
-    	System.out.println(filesystem1);
-    	String mount_path = "/mnt"; //+System.currentTimeMillis();
-    	System.out.println(mount_path);
-		mountFile=path.getText();
+    	String filesystem1 = getSelectedButtonText(fileSystem);
+    	String mountFile=path.getText();
 		
-		
-		if(mountFile.equals("") || filesystem1.equals("")){
+		String temp[]=mountFile.split("/");
+		file_name = temp[temp.length -1];		
+    	String mount_path = "/mnt_"+file_name+"_"+case_name;
+    	Umount.mountPath= mount_path;
+    	
+	
+			if(filesystem1==null || mountFile.equals("")){
+							
 			JOptionPane.showMessageDialog(null, "you have to fill  mounted file and choose file system");
-		}
-		else{
-			try{
-				  Process p1= Runtime.getRuntime().exec( "sudo mkdir "+mount_path);
-				  p1.waitFor();
+				
+			}
+		
+			else{
+				try{
+					Process p1= Runtime.getRuntime().exec( "sudo mkdir "+mount_path);
+					p1.waitFor();
 				  }
-				  catch(IOException | InterruptedException e1){
+				  	catch(IOException | InterruptedException e1){
 				  }
+				
 			  try{
 			  Process p1= Runtime.getRuntime().exec( "sudo mount -t "+filesystem1+" "+mountFile+" "+mount_path);
 			  p1.waitFor();
-			  System.out.println("kasiarakos"+where_log);
+			  
+			  fileLoad= where_log.replaceAll("log.txt","loadFiles.txt");
+			 
+			  
 			  FileWriter fw = new FileWriter(where_log,true);//true is for append-noNeed
 	   	      BufferedWriter bufferWritter = new BufferedWriter(fw);
-	   	      bufferWritter.write("\nMount point: "+mount_path+"\tFile system: "+filesystem1+"\t mounted file"+ mountFile);
+	   	      bufferWritter.write("\nMount point: "+mount_path+"\t File system: "+filesystem1+"\t mounted file"+ mountFile);
 	   	      bufferWritter.close();
+	   	      
+	   	      
+	   	      FileWriter fw2 = new FileWriter(fileLoad,true);//true is for append-noNeed
+	   	      BufferedWriter bufferWritter2 = new BufferedWriter(fw2);
+	   	      bufferWritter2.write(mount_path+"\n");
+	   	      bufferWritter2.close();
+	   	      
+	   	      
+	   	      Gui.unloadAnImage.setEnabled(true);
+	   	      Gui.loadImage.setEnabled(false);
+	   	      loadedImage= true;
 			  }
 			  catch(IOException | InterruptedException e1){
 			  }
+			  
+			  
 			if(isMounted(mount_path)==true){   
-		  JOptionPane.showMessageDialog(null, "mount was held with success");
-		  
-		 
-		  // container.setVisible(false);
-     	 // container.dispose();
+				//JOptionPane.showMessageDialog(null, "mount was held with success");
+			    createTreeView();
+			    Gui.leftPanel.updateUI();
+			    dialog.setVisible(false);
+	     	    dialog.dispose();
 			}
 			else{
 				JOptionPane.showMessageDialog(null, "this file it is not an image file or the file system you choose is wrong");
@@ -257,11 +259,27 @@ public class LoadImage  {
     }
 
     
+    
+    
+    
+    //setters getters 
+    
   public void set_where_log(String where_log_s){
     	
 	 where_log = where_log_s;
     }
   
+  public void set_case_name(String case_name_this){
+  	
+	  case_name = case_name_this;
+	    }
   
- 
+  public String get_file_name(){
+	  return file_name;
+  }
+  
+  
+  void createTreeView(){
+		new TreeView("/mnt_"+file_name+"_"+case_name);//Give the Path of LoadesImage
+	}
 }

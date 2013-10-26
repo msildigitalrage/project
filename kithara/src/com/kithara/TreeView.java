@@ -1,8 +1,22 @@
 package com.kithara;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.io.File;
 import java.util.Iterator;
 import java.util.Vector;
+
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JLabel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.JTree;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.event.TreeSelectionEvent;
@@ -13,24 +27,21 @@ import javax.swing.tree.TreePath;
 public class TreeView {
 	public static JTree fileTree;
 	private FileSystemModel fileSystemModel;
-	//private JTextArea fileDetailsTextArea = new JTextArea();
 
   public TreeView(String directory) {
-
-  //  fileDetailsTextArea.setEditable(false);//deksi komati
-   // fileDetailsTextArea.setBorder(BorderFactory.createLineBorder(Color.black));
     fileSystemModel = new FileSystemModel(new File(directory));
     fileTree = new JTree(fileSystemModel);
     fileTree.setEditable(false);//was true
     fileTree.addTreeSelectionListener(new TreeSelectionListener() {
       public void valueChanged(TreeSelectionEvent event) {
         File file = (File) fileTree.getLastSelectedPathComponent();
-    //    fileDetailsTextArea.setText(getFileDetails(file));
         	Gui.detailsFileLbl.setText(getFileDetails(file));
       }
     });
-
-    Gui.leftPanel.add(fileTree);	
+    Gui.leftPanel.add(fileTree);
+    Gui.leftPanel.updateUI();
+    Gui.mainFrame.validate();
+    Gui.mainFrame.repaint();
   }
   
   public String getFileDetails(File file) {

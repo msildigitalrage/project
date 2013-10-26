@@ -25,6 +25,7 @@ import javax.swing.JTextField;
 
 public class CaseClass {
 	
+	public String case_name;
 	public String where_log = "null";
 	JDialog jDialog = new JDialog();
 	JPanel descPanel = new JPanel(new GridBagLayout());
@@ -39,7 +40,6 @@ public class CaseClass {
     
 	public void newCase() {
 		jDialog.setModal(true);
-		//jDialog.setModalityType(ModalityType.DOCUMENT_MODAL);
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		jDialog.setBounds((screenSize.width / 2) - (200/ 2), (screenSize.height / 2) - (200 / 2), 200, 200);
 		jDialog.setResizable(false);
@@ -87,12 +87,16 @@ public class CaseClass {
 		            		System.out.println("Didn't Fill Name or Description");
 		            	}else{
 		            		String nameFolder = textNameCase.getText().toString();
+		            		
 		            		String descCase = descText.getText().toString();
 		            		createFolderCase(nameFolder,descCase);
 		            		jDialog.setVisible(false);
 		            		jDialog.dispose();
 		            		System.out.println("New Case, Folder Created");
 		            		Gui.loadImage.setEnabled(true);
+		            		Gui.closeCase.setEnabled(true);
+		            		Gui.newCase.setEnabled(false);
+		            		Gui.openCase.setEnabled(false);
 		            	}
 		                
 		            }
@@ -140,6 +144,7 @@ public class CaseClass {
 			} catch (IOException e) {}
 		       try{
 		    	   where_log = path + "/" +nameFolder+"/log.txt";
+		    	   case_name = nameFolder;
 		    	   FileWriter fw = new FileWriter(path + "/" +nameFolder+"/log.txt",true);//true is for append-noNeed
 		    	   BufferedWriter bufferWritter = new BufferedWriter(fw);
 		    	   bufferWritter.write("Case Name: "+nameFolder+"\nDescription: " + descCase + "\nCase ID: "+ System.currentTimeMillis());
@@ -158,5 +163,9 @@ public class CaseClass {
 	
 	public String get_where_log(){
 		return where_log;
+	}
+	
+	public String get_case_name(){
+		return case_name;
 	}
 }
