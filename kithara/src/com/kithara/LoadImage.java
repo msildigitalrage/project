@@ -218,7 +218,7 @@ public class LoadImage  {
 	   	      
 	   	      FileWriter fw2 = new FileWriter(fileLoad,true);//true is for append-noNeed
 	   	      BufferedWriter bufferWritter2 = new BufferedWriter(fw2);
-	   	      bufferWritter2.write(mount_path+"\n");
+	   	      bufferWritter2.write(mountFile+"\n");
 	   	      bufferWritter2.close();
 	   	      
 	   	      

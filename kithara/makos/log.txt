@@ -1,3 +1,0 @@
-Case Name: makos
-Description: asda
-Case ID: 1382801622841

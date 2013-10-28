@@ -78,7 +78,8 @@ public class Gui {
 	        
 	        openCase.addActionListener(new ActionListener() {
 	            public void actionPerformed(ActionEvent event) {		
-	            	//open reeeeeeeeeeee
+	            	OpenCase openCase = new OpenCase();
+	            	openCase.loadCase();
 	            }
 	        });
 	        
