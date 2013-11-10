@@ -36,6 +36,8 @@ public class TreeView {
       public void valueChanged(TreeSelectionEvent event) {
         File file = (File) fileTree.getLastSelectedPathComponent();
         	Gui.detailsFileLbl.setText(getFileDetails(file));
+        	FileInvestigate fileInvestigate = new FileInvestigate(getFilePath(file));
+        	
       }
     });
     Gui.leftPanel.add(fileTree);
@@ -48,9 +50,17 @@ public class TreeView {
     if (file == null)
       return "";
     StringBuffer buffer = new StringBuffer();
-    buffer.append(" >> " + file.getPath());
+    buffer.append(" >> " + file.getPath() + "\n");
     return buffer.toString();
   }
+  
+  public String getFilePath(File file) {
+	    if (file == null)
+	      return "";
+	    StringBuffer buffer = new StringBuffer();
+	    buffer.append(file.getPath());
+	    return buffer.toString();
+	  }
 
 }
  

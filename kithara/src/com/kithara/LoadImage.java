@@ -13,7 +13,7 @@ import static javax.swing.GroupLayout.Alignment.*;
  
 public class LoadImage  {
 	public static boolean loadedImage = false;
-	public String where_log;
+	public static String where_log;
 	public String case_name;
 	public String file_name;
 	public String fileLoad;
@@ -30,6 +30,7 @@ public class LoadImage  {
         JRadioButton ext4Box = new JRadioButton("ext4");
         JRadioButton ntfsBox = new JRadioButton("ntfs");
         JRadioButton ext3Box = new JRadioButton("vfat");
+        ext4Box.setSelected(true);
         fileSystem.add(ext3Box);
         fileSystem.add(ext4Box);
         fileSystem.add(ntfsBox);
@@ -187,6 +188,8 @@ public class LoadImage  {
 		file_name = temp[temp.length -1];		
     	String mount_path = "/mnt_"+file_name+"_"+case_name;
     	Umount.mountPath= mount_path;
+    	CommonData.mountPath=mount_path;
+    	CommonData.projectPath=where_log.replaceAll("log.txt","");
     	
 	
 			if(filesystem1==null || mountFile.equals("")){
@@ -208,38 +211,42 @@ public class LoadImage  {
 			  p1.waitFor();
 			  
 			  fileLoad= where_log.replaceAll("log.txt","loadFiles.txt");
-			 
+			  if(isMounted(mount_path)==true){   
+					//JOptionPane.showMessageDialog(null, "mount was held with success");
+				    createTreeView(mount_path);
+				    Gui.leftPanel.updateUI();
+				    dialog.setVisible(false);
+		     	    dialog.dispose();
+		     	    
+		     	    
+
+					  FileWriter fw = new FileWriter(where_log,true);//true is for append-noNeed
+			   	      BufferedWriter bufferWritter = new BufferedWriter(fw);
+			   	      bufferWritter.write("\nMount point: "+mount_path+"\t File system: "+filesystem1+"\t mounted file"+ mountFile);
+			   	      bufferWritter.close();
+			   	      
+			   	      
+			   	      FileWriter fw2 = new FileWriter(fileLoad,true);//true is for append-noNeed
+			   	      BufferedWriter bufferWritter2 = new BufferedWriter(fw2);
+			   	      bufferWritter2.write(mountFile+":"+filesystem1+"\n");
+			   	      bufferWritter2.close();
+			   	      
+			   	      
+			   	      Gui.unloadAnImage.setEnabled(true);
+			   	      Gui.loadImage.setEnabled(false);
+			   	      loadedImage= true;
+			   	      Gui.commonEvidences.setEnabled(true);
+				}
+				else{
+					JOptionPane.showMessageDialog(null, "this file it is not an image file or the file system you choose is wrong");
+				}
 			  
-			  FileWriter fw = new FileWriter(where_log,true);//true is for append-noNeed
-	   	      BufferedWriter bufferWritter = new BufferedWriter(fw);
-	   	      bufferWritter.write("\nMount point: "+mount_path+"\t File system: "+filesystem1+"\t mounted file"+ mountFile);
-	   	      bufferWritter.close();
-	   	      
-	   	      
-	   	      FileWriter fw2 = new FileWriter(fileLoad,true);//true is for append-noNeed
-	   	      BufferedWriter bufferWritter2 = new BufferedWriter(fw2);
-	   	      bufferWritter2.write(mountFile+"\n");
-	   	      bufferWritter2.close();
-	   	      
-	   	      
-	   	      Gui.unloadAnImage.setEnabled(true);
-	   	      Gui.loadImage.setEnabled(false);
-	   	      loadedImage= true;
 			  }
 			  catch(IOException | InterruptedException e1){
 			  }
 			  
 			  
-			if(isMounted(mount_path)==true){   
-				//JOptionPane.showMessageDialog(null, "mount was held with success");
-			    createTreeView();
-			    Gui.leftPanel.updateUI();
-			    dialog.setVisible(false);
-	     	    dialog.dispose();
-			}
-			else{
-				JOptionPane.showMessageDialog(null, "this file it is not an image file or the file system you choose is wrong");
-			}
+			
 		}
 		
     }
@@ -279,7 +286,7 @@ public class LoadImage  {
   }
   
   
-  void createTreeView(){
-		new TreeView("/mnt_"+file_name+"_"+case_name);//Give the Path of LoadesImage
+  public static void createTreeView(String path){
+		new TreeView(path);//Give the Path of LoadesImage
 	}
 }

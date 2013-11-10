@@ -1,5 +1,3 @@
-package com.kithara;
-
 import java.io.IOException;
 
 import javax.swing.JOptionPane;
@@ -19,7 +17,6 @@ public class Umount {
 					  Gui.loadImage.setEnabled(true);
 					  TreeView.fileTree.setModel(null);
 					  LoadImage.loadedImage=false;
-			   	      Gui.commonEvidences.setEnabled(false);
 				  try{
 					  
 					  Process p= Runtime.getRuntime().exec( "sudo rmdir "+mountPath);

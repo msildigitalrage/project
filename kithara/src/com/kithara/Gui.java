@@ -1,5 +1,4 @@
 package com.kithara;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -15,7 +14,9 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
 
 public class Gui {
 	
@@ -31,29 +32,43 @@ public class Gui {
 	public static JMenuItem loadImage = new JMenuItem("Add Image (.dd)");
 	public static JMenuItem unloadAnImage = new JMenuItem("Remove Image");
 	final JMenuItem exitClose = new JMenuItem("Exit");
+	public static JTabbedPane botPanel = new JTabbedPane();
+	public static JMenu evidences = new JMenu("Evidences");
 	public static JPanel leftPanel = new JPanel();
 	public static JPanel centerPanel = new JPanel();
 	public static JPanel topPanel = new JPanel();
-	public static JPanel botPanel = new JPanel();
+	public static JPanel contacts = new JPanel();
+	public static JPanel sms = new JPanel();
 	public static JTextArea logText= new JTextArea();
-	
+	public static JMenuItem commonEvidences = new JMenuItem("Common Evidences");
+	//pagination for files 
+	public static JPanel paginationPanel = new JPanel();
+	public static JPanel tmpPanel = new JPanel();
+	//public static JLabel paginationLbl = new JLabel();
+	//public static JButton nextPage = new JButton(">>");
+	//public static JButton previousPage = new JButton("<<");
+	public static int offset = 0;
    	public static JScrollPane scrollPaneLeft = new JScrollPane(leftPanel,
             JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
             JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     
-    JScrollPane scrollPaneCenter = new JScrollPane(centerPanel,
+   	public static JScrollPane scrollPaneCenter = new JScrollPane(centerPanel,
             JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
             JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-    JScrollPane scrollPaneSouth = new JScrollPane(botPanel,
+   /*	public static JScrollPane scrollPaneSouth = new JScrollPane(botPanel,
             JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
             JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-    
+    */
+   	
     public static JLabel detailsFileLbl = new JLabel();
-	Font lblTop = new Font("Courier", Font.LAYOUT_LEFT_TO_RIGHT,10);
+	public static Font lblTop = new Font("Courier", Font.BOLD,10);
 	public Gui() {
 		createFrame();
 		createPanels();
 		createMenu();
+		botPanel.addTab("contacts", contacts);
+		botPanel.addTab("sms",sms);
+		
 	}
 		void createFrame(){
 		    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -119,6 +134,7 @@ public class Gui {
 		                System.exit(0);
 		            }
 		        });
+		        
 		             
 			file.add(newCase);
 			file.add(openCase);
@@ -134,7 +150,30 @@ public class Gui {
 			JMenuItem about = new JMenuItem("about");
 			help.add(about);
 			menuBar.add(help);
+			
+			//common Evidences
+			commonEvidences.setEnabled(false);
+			evidences.add(commonEvidences);
+			menuBar.add(evidences);
+			
+			
+			commonEvidences.addActionListener(new ActionListener() {
+	            public void actionPerformed(ActionEvent event) {		
+	            	final CommonData cd = new CommonData();
+	            	SwingUtilities.invokeLater(new Runnable() {
+	  	              public void run() {
+	  	            	cd.getContacts();
+	  	            	cd.getSms();
+	  	              }
+	  	            });
+	            	
+	            	
+	            }
+	        });
+	        
+			
 			mainFrame.setJMenuBar(menuBar);
+			
 		}
 		
 		void createPanels(){
@@ -145,29 +184,45 @@ public class Gui {
 			centerPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 			botPanel.setBorder(BorderFactory.createLineBorder(Color.GREEN));
 			botPanel.setBackground(Color.WHITE);
-			//leftPanel.setBackground(Color.WHITE);
+			leftPanel.setBackground(Color.WHITE);
 			centerPanel.setBackground(Color.WHITE);
 		
 			// ----------------------sizes panel----------------------
 			scrollPaneLeft.setPreferredSize(new Dimension(screenSize.width*2/8, screenSize.height*3/4));
 	        scrollPaneCenter.setPreferredSize(new Dimension(screenSize.width*6/8, screenSize.height*3/4));
-	        topPanel.setPreferredSize(new Dimension(screenSize.width, 20));
+	        topPanel.setPreferredSize(new Dimension(screenSize.width, 40));
 
-			scrollPaneSouth.setPreferredSize(new Dimension(screenSize.width, (screenSize.height/4)-20));
+			botPanel.setPreferredSize(new Dimension(screenSize.width, (screenSize.height/4 +20)));
 			
 			// -------------Add top Module Information File Clicked---------------------------
 			topPanel.setLayout(new BorderLayout());
 			topPanel.setBackground(Color.WHITE);
-			topPanel.setBorder(BorderFactory.createLineBorder(Color.red));
+			topPanel.setBorder(BorderFactory.createLineBorder(Color.red));	
 			topPanel.add(detailsFileLbl,BorderLayout.WEST);
 			detailsFileLbl.setFont(lblTop);
+			detailsFileLbl.setForeground(Color.BLACK);
+			
+			//Add pagination Buttons
+			paginationPanel.setBackground(Color.WHITE);
+			/*
+				previousPage.setForeground(Color.ORANGE);
+				nextPage.setForeground(Color.ORANGE);
+				previousPage.setBackground(Color.BLACK);
+				nextPage.setBackground(Color.BLACK);
+				paginationPanel.add(previousPage);
+				paginationPanel.add(paginationLbl);
+				paginationPanel.add(nextPage);		
+				*/
+			paginationPanel.add(FileInvestigate.linesLabel);
+			topPanel.add(paginationPanel,BorderLayout.EAST);
 			
 	        // ------------Add Panels to mainFrame-------------------------
 	        mainFrame.setLayout(new BorderLayout());
+	        //mainFrame.getContentPane().add(topPanel,BorderLayout.NORTH);
 	        mainFrame.getContentPane().add(scrollPaneLeft,BorderLayout.WEST);
 	        mainFrame.getContentPane().add(scrollPaneCenter,BorderLayout.CENTER);
 	        mainFrame.getContentPane().add(topPanel,BorderLayout.NORTH);
-	        mainFrame.getContentPane().add(scrollPaneSouth,BorderLayout.SOUTH);
+	        mainFrame.getContentPane().add(botPanel,BorderLayout.SOUTH);
 	        mainFrame.pack();			
 		}
 		
