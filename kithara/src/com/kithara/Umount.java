@@ -20,6 +20,7 @@ public class Umount {
 					  TreeView.fileTree.setModel(null);
 					  LoadImage.loadedImage=false;
 			   	      Gui.commonEvidences.setEnabled(false);
+			   	      Gui.hashes.setEnabled(false);
 				  try{
 					  
 					  Process p= Runtime.getRuntime().exec( "sudo rmdir "+mountPath);

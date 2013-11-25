@@ -1,22 +1,12 @@
 package com.kithara;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
+
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Iterator;
 import java.util.Vector;
-
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JLabel;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.JTree;
-import javax.swing.border.EmptyBorder;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.event.TreeSelectionEvent;
@@ -50,7 +40,29 @@ public class TreeView {
     if (file == null)
       return "";
     StringBuffer buffer = new StringBuffer();
-    buffer.append(" >> " + file.getPath() + "\n");
+    buffer.append("Mount on: " + file.getPath());
+	String lineMD5;//MD5 of file
+	Process p1;//use this for MD5sum
+	try{
+		if(file.length()!=4096){
+		p1= Runtime.getRuntime().exec( "md5sum "+file.getPath());
+		p1.waitFor();
+	       BufferedReader in = new BufferedReader(
+	               new InputStreamReader(p1.getInputStream()) );
+	       while ((lineMD5 = in.readLine()) != null) {//just hold only the hash value
+	    	   if(lineMD5.contains(" ")){
+	    		   lineMD5= lineMD5.substring(0, lineMD5.indexOf(" ")); 
+	    		}
+	         //System.out.println(lineMD5);
+	buffer.append(" | Md5: " + lineMD5);
+	       }
+	       in.close();
+		}else{
+			//Do not Calculate HASH of a folder or it's contents
+		}
+	  }
+	  	catch(IOException | InterruptedException e1){
+	  }
     return buffer.toString();
   }
   

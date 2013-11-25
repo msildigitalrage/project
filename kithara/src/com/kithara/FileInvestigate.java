@@ -1,4 +1,4 @@
-	package com.kithara;
+package com.kithara;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
@@ -119,14 +119,14 @@ import javax.swing.SwingUtilities;
 				while(line != null){
 					counterLine++;
 				    line = in.readLine();
-				    System.out.println("Line: " + counterLine);
+				    //System.out.println("Line: " + counterLine);
 				}
 			}catch (IOException e) {
 				e.printStackTrace();		
 			}
 			sumLines = counterLine;
 			counterLine = 0;
-			System.out.println("Sum Lines of File: " + sumLines);
+			//System.out.println("Sum Lines of File: " + sumLines);
 			linesLabel.setText("Lines of File: "+sumLines);
 			
 

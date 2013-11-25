@@ -136,6 +136,7 @@ public class LoadImage  {
 			  reader=new BufferedReader(new InputStreamReader(p2.getInputStream()));
 			  String line="";
 			  
+			  
 			  line=reader.readLine();
 			  if(line == null || line==" "){
 					flag = 0;
@@ -185,8 +186,10 @@ public class LoadImage  {
     	String mountFile=path.getText();
 		
 		String temp[]=mountFile.split("/");
-		file_name = temp[temp.length -1];		
+		file_name = temp[temp.length -1];	
     	String mount_path = "/mnt_"+file_name+"_"+case_name;
+		HashCalculate.head= mount_path;// take path to use it in HashCalculate
+		HashCalculate.caseName = case_name;
     	Umount.mountPath= mount_path;
     	CommonData.mountPath=mount_path;
     	CommonData.projectPath=where_log.replaceAll("log.txt","");
@@ -236,6 +239,7 @@ public class LoadImage  {
 			   	      Gui.loadImage.setEnabled(false);
 			   	      loadedImage= true;
 			   	      Gui.commonEvidences.setEnabled(true);
+			   	      Gui.hashes.setEnabled(true);
 				}
 				else{
 					JOptionPane.showMessageDialog(null, "this file it is not an image file or the file system you choose is wrong");

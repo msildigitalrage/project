@@ -36,7 +36,9 @@ public class OpenCase {
     	fileSystem=temp[1];
 		
     	String mountPath = "/mnt_"+mountFile+"_"+caseName;
-    	System.out.println(mountPath+"gia ton p");
+		HashCalculate.head= mountPath;// take path to use it in HashCalculate
+		HashCalculate.caseName = caseName;
+    	System.out.println(mountPath+"gia ton p");//afto giati to vazeis etsi? lew hehe
     	
     	
     	
@@ -75,6 +77,7 @@ public class OpenCase {
 	   	      }
 	   	    	      
 	   	      Gui.commonEvidences.setEnabled(true);
+	   	      Gui.hashes.setEnabled(true);
 	   	      Gui.unloadAnImage.setEnabled(true);
 	   	      Gui.loadImage.setEnabled(false);
 	   	      LoadImage.loadedImage= true;

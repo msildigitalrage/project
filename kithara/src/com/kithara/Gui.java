@@ -17,9 +17,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
-
 public class Gui {
-	
     public String case_name;
 	public String where_log;
 	public String file_name=null;
@@ -39,14 +37,17 @@ public class Gui {
 	public static JPanel topPanel = new JPanel();
 	public static JPanel contacts = new JPanel();
 	public static JPanel sms = new JPanel();
+	public static JPanel browserHistory = new JPanel();
+	public static JPanel calls = new JPanel();
 	public static JTextArea logText= new JTextArea();
 	public static JMenuItem commonEvidences = new JMenuItem("Common Evidences");
-	//pagination for files 
+	public static JMenuItem hashes = new JMenuItem("Calculate & Export MD5 Hashes");
+	//Locations Menu
+	public static JMenu Locations = new JMenu("Locations");
+	public static JMenuItem findLocations = new JMenuItem("Find Locations");
+	//
 	public static JPanel paginationPanel = new JPanel();
 	public static JPanel tmpPanel = new JPanel();
-	//public static JLabel paginationLbl = new JLabel();
-	//public static JButton nextPage = new JButton(">>");
-	//public static JButton previousPage = new JButton("<<");
 	public static int offset = 0;
    	public static JScrollPane scrollPaneLeft = new JScrollPane(leftPanel,
             JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
@@ -55,21 +56,26 @@ public class Gui {
    	public static JScrollPane scrollPaneCenter = new JScrollPane(centerPanel,
             JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
             JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-   /*	public static JScrollPane scrollPaneSouth = new JScrollPane(botPanel,
-            JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-            JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-    */
    	
     public static JLabel detailsFileLbl = new JLabel();
-	public static Font lblTop = new Font("Courier", Font.BOLD,10);
+	public static Font lblTop = new Font("Courier", Font.TRUETYPE_FONT,10);
 	public Gui() {
 		createFrame();
 		createPanels();
 		createMenu();
-		botPanel.addTab("contacts", contacts);
-		botPanel.addTab("sms",sms);
-		
+		colorTabs();	
 	}
+		void colorTabs(){
+			botPanel.setBackground(Color.WHITE);
+			botPanel.addTab("contacts", contacts);
+			botPanel.addTab("sms",sms);
+			botPanel.addTab("calls", calls);
+			botPanel.addTab("browser history", browserHistory);
+			sms.setBackground(Color.WHITE);
+			contacts.setBackground(Color.WHITE);
+			botPanel.setBackgroundAt(1, Color.WHITE);
+			botPanel.setBackgroundAt(0, Color.WHITE);
+		}
 		void createFrame(){
 		    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		    mainFrame.setBounds(0,0,screenSize.width, screenSize.height);
@@ -110,7 +116,10 @@ public class Gui {
 	            	closeCase.setEnabled(false);
 	            	newCase.setEnabled(true);
 	            	openCase.setEnabled(true);
-	            	
+	            	sms.remove(CommonData.scroller);
+	            	contacts.remove(CommonData.scroller);
+	            	Gui.sms.updateUI();
+	            	Gui.contacts.updateUI();
 	            }
 	        });
 	        
@@ -134,8 +143,7 @@ public class Gui {
 		                System.exit(0);
 		            }
 		        });
-		        
-		             
+		        	             
 			file.add(newCase);
 			file.add(openCase);
 			file.add(closeCase);
@@ -146,36 +154,81 @@ public class Gui {
 			file.add(exitClose);
 			menuBar.add(file);
 			
-			JMenu help = new JMenu("Help");
-			JMenuItem about = new JMenuItem("about");
-			help.add(about);
-			menuBar.add(help);
+
 			
 			//common Evidences
 			commonEvidences.setEnabled(false);
+			hashes.setEnabled(false);
 			evidences.add(commonEvidences);
-			menuBar.add(evidences);
+			evidences.add(hashes);
+			menuBar.add(evidences);	
 			
 			
 			commonEvidences.addActionListener(new ActionListener() {
 	            public void actionPerformed(ActionEvent event) {		
 	            	final CommonData cd = new CommonData();
-	            	SwingUtilities.invokeLater(new Runnable() {
-	  	              public void run() {
+	            	detailsFileLbl.setText("please wait.. (may take some time)");
+  	            	System.out.println("please wait..");
+	            	SwingUtilities.invokeLater(new Runnable()  {
+	  	              public void run() {	
 	  	            	cd.getContacts();
 	  	            	cd.getSms();
+	  	            	cd.getCalls();
+	  	            	cd.getBrowserHistory();
+	  	           	  System.out.println("common data printed");
+	  	           	detailsFileLbl.setText(null);
 	  	              }
 	  	            });
-	            	
-	            	
 	            }
-	        });
-	        
+	        });	
 			
-			mainFrame.setJMenuBar(menuBar);
+			//Calculate Hash Values -- MD5
+			hashes.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent event) {
+					final HashCalculate hc = new HashCalculate();
+					detailsFileLbl.setText("please wait.. (may take some minutes)");
+					System.out.println("please wait..");
+	            	SwingUtilities.invokeLater(new Runnable()  {
+		  	              public void run() {	
+		  	            	hc.calcMD5();
+		  	           	  System.out.println("Hash finished..");
+		  	           	detailsFileLbl.setText(null);
+		  	              }
+		  	            });
+				}
+			});
+
 			
-		}
-		
+			//---------Locations--------------
+			//findLocations.setEnabled(false);
+			Locations.add(findLocations);
+			menuBar.add(Locations);
+			
+			findLocations.addActionListener(new ActionListener() {
+	            public void actionPerformed(ActionEvent event) {		
+	            	final Locations loc = new Locations();
+	            	detailsFileLbl.setText("please wait.. (may take some time)");
+  	            	System.out.println("please wait..");
+	            	SwingUtilities.invokeLater(new Runnable()  {
+	  	              public void run() {	
+	  	            	loc.getLocations();
+	  	           	  System.out.println("locations Search ended");
+	  	           	detailsFileLbl.setText(null);
+	  	              }
+	  	            });
+	            }
+	        });	
+			
+			//Help
+			JMenu help = new JMenu("Help");
+			JMenuItem about = new JMenuItem("about");
+			help.add(about);
+			menuBar.add(help);
+			
+			mainFrame.setJMenuBar(menuBar);		
+		}	
 		void createPanels(){
 			Dimension screenSize = mainFrame.getBounds().getSize();
 			//borders - colors
@@ -204,18 +257,8 @@ public class Gui {
 			
 			//Add pagination Buttons
 			paginationPanel.setBackground(Color.WHITE);
-			/*
-				previousPage.setForeground(Color.ORANGE);
-				nextPage.setForeground(Color.ORANGE);
-				previousPage.setBackground(Color.BLACK);
-				nextPage.setBackground(Color.BLACK);
-				paginationPanel.add(previousPage);
-				paginationPanel.add(paginationLbl);
-				paginationPanel.add(nextPage);		
-				*/
 			paginationPanel.add(FileInvestigate.linesLabel);
 			topPanel.add(paginationPanel,BorderLayout.EAST);
-			
 	        // ------------Add Panels to mainFrame-------------------------
 	        mainFrame.setLayout(new BorderLayout());
 	        //mainFrame.getContentPane().add(topPanel,BorderLayout.NORTH);
@@ -225,7 +268,4 @@ public class Gui {
 	        mainFrame.getContentPane().add(botPanel,BorderLayout.SOUTH);
 	        mainFrame.pack();			
 		}
-		
-		 
-		
 }
