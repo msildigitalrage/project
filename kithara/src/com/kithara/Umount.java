@@ -21,6 +21,7 @@ public class Umount {
 					  LoadImage.loadedImage=false;
 			   	      Gui.commonEvidences.setEnabled(false);
 			   	      Gui.hashes.setEnabled(false);
+			   	      Gui.findLocations.setEnabled(false);
 				  try{
 					  
 					  Process p= Runtime.getRuntime().exec( "sudo rmdir "+mountPath);

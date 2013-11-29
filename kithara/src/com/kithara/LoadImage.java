@@ -188,8 +188,8 @@ public class LoadImage  {
 		String temp[]=mountFile.split("/");
 		file_name = temp[temp.length -1];	
     	String mount_path = "/mnt_"+file_name+"_"+case_name;
-		HashCalculate.head= mount_path;// take path to use it in HashCalculate
-		HashCalculate.caseName = case_name;
+    	HashCalculate.head= mount_path;// take path to use it in HashCalculate
+		HashCalculate.caseName = where_log.replaceAll("log.txt","");
     	Umount.mountPath= mount_path;
     	CommonData.mountPath=mount_path;
     	CommonData.projectPath=where_log.replaceAll("log.txt","");
@@ -240,6 +240,7 @@ public class LoadImage  {
 			   	      loadedImage= true;
 			   	      Gui.commonEvidences.setEnabled(true);
 			   	      Gui.hashes.setEnabled(true);
+			   	      Gui.findLocations.setEnabled(true);
 				}
 				else{
 					JOptionPane.showMessageDialog(null, "this file it is not an image file or the file system you choose is wrong");

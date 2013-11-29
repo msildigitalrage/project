@@ -176,9 +176,11 @@ public class CommonData {
 			Connection conn2 = DriverManager.getConnection("jdbc:sqlite:"+projectPath+"commonData.db");
 			Statement stat2=conn2.createStatement();
 			stat2.executeUpdate("drop table if exists sms;");
-	        stat2.executeUpdate("create table sms (id,address,person,name,date,date_sent,body,service_center);");
+	        stat2.executeUpdate("create table sms (id,address,person,name,timestamp,date,date_sent,body,service_center);");
 	      	        
 			ResultSet rs = stat.executeQuery("select * from sms;");
+			
+			
 			
 			while(rs.next()){
 				
@@ -190,6 +192,7 @@ public class CommonData {
 				address = rs.getString("address");
 				person = rs.getString("person");
 				name = "null";
+				
 				date = rs.getLong("date");
 				/*long dv = Long.valueOf(date);
 				Date df = new java.util.Date(dv);
@@ -200,8 +203,19 @@ public class CommonData {
 				body= rs.getString("body");
 				serviceCenter = rs.getString("service_center");
 				
+				
+				if(person!=null){
+					
+					System.out.println("shititititititi");
+					ResultSet rs3 = stat2.executeQuery("SELECT name FROM contacts WHERE id="+person);
+					String temp = rs3.getString("name");
+					rs3.close();
+					name = temp;
+					
+				}
+				
 							
-				sql= "INSERT INTO sms VALUES ("+id+",\'"+address+"\',\'"+person+"\',\'"+name+"\',\'"+time+"\',\'"+timeSent+"\',\'"+body+"\',\'"+serviceCenter+"\');";
+				sql= "INSERT INTO sms VALUES ("+id+",\'"+address+"\',\'"+person+"\',\'"+name+"\',\'"+date+"\',\'"+time+"\',\'"+timeSent+"\',\'"+body+"\',\'"+serviceCenter+"\');";
 				stat2.executeUpdate(sql);
 				conn2.setAutoCommit(false);
 			    conn2.commit();
@@ -219,10 +233,7 @@ public class CommonData {
 			Class.forName("org.sqlite.JDBC");
 			Connection conn = DriverManager.getConnection("jdbc:sqlite:"+projectPath+"commonData.db");
 			Statement stat = conn.createStatement();
-			
-			Connection conn2 = DriverManager.getConnection("jdbc:sqlite:"+projectPath+"commonData.db");
-			Statement stat2 = conn2.createStatement();
-			
+				
 			
 		   ResultSet rs1 = stat.executeQuery("SELECT Count(*) AS total FROM sms");
 		   int k = rs1.getInt("total");
@@ -248,14 +259,6 @@ public class CommonData {
 				serviceCenter = rs.getString("service_center");
 					
 				
-				if(person.compareTo("null")!=0){
-					
-					ResultSet rs2 = stat2.executeQuery("SELECT name FROM contacts WHERE id="+person);
-					String temp = rs2.getString("name");
-					rs2.close();
-					name = temp;
-					
-				}
 				
 				
 				arr2[i][0]=Integer.toString(id);
@@ -296,7 +299,7 @@ public class CommonData {
 			Connection conn2 = DriverManager.getConnection("jdbc:sqlite:"+projectPath+"commonData.db");
 			Statement stat2=conn2.createStatement();
 			stat2.executeUpdate("drop table if exists calls;");
-	        stat2.executeUpdate("create table calls (id,number,name,date,duration,type,countryiso,geocoded_location);");
+	        stat2.executeUpdate("create table calls (id,number,name,timestamp,date,duration,type,countryiso,geocoded_location);");
 	      	        
 			ResultSet rs = stat.executeQuery("select * from calls;");
 			
@@ -332,7 +335,7 @@ public class CommonData {
 					type="uknown";
 				}
 				
-				sql= "INSERT INTO calls VALUES ("+id+",\'"+number+"\',\'"+name+"\',\'"+time2+"\',\'"+duration+"\',\'"+type+"\',\'"+countryIso+"\',\'"+geocodedLocation+"\');";
+				sql= "INSERT INTO calls VALUES ("+id+",\'"+number+"\',\'"+name+"\',\'"+date+"\',\'"+time2+"\',\'"+duration+"\',\'"+type+"\',\'"+countryIso+"\',\'"+geocodedLocation+"\');";
 				stat2.executeUpdate(sql);
 				conn2.setAutoCommit(false);
 			    conn2.commit();
@@ -434,7 +437,7 @@ public class CommonData {
 			Connection conn2 = DriverManager.getConnection("jdbc:sqlite:"+projectPath+"commonData.db");
 			Statement stat2=conn2.createStatement();
 			stat2.executeUpdate("drop table if exists browserHistory;");
-	        stat2.executeUpdate("create table browserHistory (id,title,url,date,visits);");
+	        stat2.executeUpdate("create table browserHistory (id,title,url,timestamp,date,visits);");
 	      	        
 			ResultSet rs = stat.executeQuery("select * from history;");
 			
@@ -458,7 +461,7 @@ public class CommonData {
 				
 				
 				
-				sql= "INSERT INTO browserHistory VALUES ("+id+",\'"+title+"\',\'"+url+"\',\'"+time+"\',\'"+visits+"\');";
+				sql= "INSERT INTO browserHistory VALUES ("+id+",\'"+title+"\',\'"+url+"\',\'"+date+"\',\'"+time+"\',\'"+visits+"\');";
 				stat2.executeUpdate(sql);
 				conn2.setAutoCommit(false);
 			    conn2.commit();

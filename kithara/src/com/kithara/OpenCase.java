@@ -36,8 +36,6 @@ public class OpenCase {
     	fileSystem=temp[1];
 		
     	String mountPath = "/mnt_"+mountFile+"_"+caseName;
-		HashCalculate.head= mountPath;// take path to use it in HashCalculate
-		HashCalculate.caseName = caseName;
     	System.out.println(mountPath+"gia ton p");//afto giati to vazeis etsi? lew hehe
     	
     	
@@ -68,8 +66,8 @@ public class OpenCase {
 			    LoadImage.where_log=log;
 			    Umount.mountPath=mountPath;
 			    CommonData.mountPath= mountPath;
-			    
-			    
+			    HashCalculate.head= mountPath;// take path to use it in HashCalculate
+				HashCalculate.caseName = log.replaceAll("log.txt", ""); 
 			    CommonData.projectPath = log.replaceAll("log.txt", "");
 	   	      }
 	   	      else{
@@ -81,6 +79,7 @@ public class OpenCase {
 	   	      Gui.unloadAnImage.setEnabled(true);
 	   	      Gui.loadImage.setEnabled(false);
 	   	      LoadImage.loadedImage= true;
+	   	      Gui.findLocations.setEnabled(true);
 			  }
 			  catch(IOException | InterruptedException e1){
 			  }

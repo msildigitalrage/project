@@ -44,7 +44,9 @@ public class Gui {
 	public static JMenuItem hashes = new JMenuItem("Calculate & Export MD5 Hashes");
 	//Locations Menu
 	public static JMenu Locations = new JMenu("Locations");
+	public static JMenu timeline = new JMenu("Timeline");
 	public static JMenuItem findLocations = new JMenuItem("Find Locations");
+	public static JMenuItem createtimeline = new JMenuItem("create timeline");
 	//
 	public static JPanel paginationPanel = new JPanel();
 	public static JPanel tmpPanel = new JPanel();
@@ -202,9 +204,21 @@ public class Gui {
 
 			
 			//---------Locations--------------
-			//findLocations.setEnabled(false);
+			findLocations.setEnabled(false);
 			Locations.add(findLocations);
 			menuBar.add(Locations);
+			timeline.add(createtimeline);
+			menuBar.add(timeline);
+			
+			createtimeline.addActionListener(new ActionListener() {
+						
+						@Override
+						public void actionPerformed(ActionEvent arg0) {
+							// TODO Auto-generated method stub
+							new Timeline();
+							
+						}
+					});
 			
 			findLocations.addActionListener(new ActionListener() {
 	            public void actionPerformed(ActionEvent event) {		
@@ -213,7 +227,7 @@ public class Gui {
   	            	System.out.println("please wait..");
 	            	SwingUtilities.invokeLater(new Runnable()  {
 	  	              public void run() {	
-	  	            	loc.getLocations();
+	  	            	loc.mapCreator();
 	  	           	  System.out.println("locations Search ended");
 	  	           	detailsFileLbl.setText(null);
 	  	              }
