@@ -39,6 +39,9 @@ public class Gui {
 	public static JPanel sms = new JPanel();
 	public static JPanel browserHistory = new JPanel();
 	public static JPanel calls = new JPanel();
+	public static JPanel viberPanel = new JPanel();
+	public static JPanel whatsUpPanel = new JPanel();
+	public static JPanel twitterPanel = new JPanel();
 	public static JTextArea logText= new JTextArea();
 	public static JMenuItem commonEvidences = new JMenuItem("Common Evidences");
 	public static JMenuItem hashes = new JMenuItem("Calculate & Export MD5 Hashes");
@@ -73,6 +76,9 @@ public class Gui {
 			botPanel.addTab("sms",sms);
 			botPanel.addTab("calls", calls);
 			botPanel.addTab("browser history", browserHistory);
+			botPanel.addTab("Viber", viberPanel);
+			botPanel.addTab("Whats'Up", whatsUpPanel);
+			botPanel.addTab("Twitter", twitterPanel);
 			sms.setBackground(Color.WHITE);
 			contacts.setBackground(Color.WHITE);
 			botPanel.setBackgroundAt(1, Color.WHITE);
@@ -172,11 +178,16 @@ public class Gui {
 	            	detailsFileLbl.setText("please wait.. (may take some time)");
   	            	System.out.println("please wait..");
 	            	SwingUtilities.invokeLater(new Runnable()  {
-	  	              public void run() {	
-	  	            	cd.getContacts();
+	  	              public void run() {
+	  	            	cd.getPermissions(); 
+	  	            	/*cd.getContacts();
 	  	            	cd.getSms();
 	  	            	cd.getCalls();
 	  	            	cd.getBrowserHistory();
+	  	            	cd.getViber();
+	  	            	cd.getWhatsUp();
+	  	            	*/
+	  	            	cd.getTwitter();
 	  	           	  System.out.println("common data printed");
 	  	           	detailsFileLbl.setText(null);
 	  	              }
@@ -227,6 +238,7 @@ public class Gui {
   	            	System.out.println("please wait..");
 	            	SwingUtilities.invokeLater(new Runnable()  {
 	  	              public void run() {	
+	  	            	  
 	  	            	loc.mapCreator();
 	  	           	  System.out.println("locations Search ended");
 	  	           	detailsFileLbl.setText(null);
