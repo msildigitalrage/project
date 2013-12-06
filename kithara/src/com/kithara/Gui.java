@@ -71,6 +71,7 @@ public class Gui {
 		colorTabs();	
 	}
 		void colorTabs(){
+	        
 			botPanel.setBackground(Color.WHITE);
 			botPanel.addTab("contacts", contacts);
 			botPanel.addTab("sms",sms);
@@ -79,10 +80,21 @@ public class Gui {
 			botPanel.addTab("Viber", viberPanel);
 			botPanel.addTab("Whats'Up", whatsUpPanel);
 			botPanel.addTab("Twitter", twitterPanel);
-			sms.setBackground(Color.WHITE);
-			contacts.setBackground(Color.WHITE);
-			botPanel.setBackgroundAt(1, Color.WHITE);
-			botPanel.setBackgroundAt(0, Color.WHITE);
+				contacts.setBackground(Color.WHITE);
+				sms.setBackground(Color.WHITE);
+				calls.setBackground(Color.WHITE);
+				browserHistory.setBackground(Color.WHITE);
+				viberPanel.setBackground(Color.WHITE);
+				whatsUpPanel.setBackground(Color.WHITE);
+				twitterPanel.setBackground(Color.WHITE);				
+		
+				botPanel.setForegroundAt(0,new Color(100));
+				botPanel.setForegroundAt(1,new Color(100));
+				botPanel.setForegroundAt(2,new Color(100));
+				botPanel.setForegroundAt(3,new Color(100));
+				botPanel.setForegroundAt(4,new Color(100));
+				botPanel.setForegroundAt(5,new Color(100));
+				botPanel.setForegroundAt(6,new Color(100));
 		}
 		void createFrame(){
 		    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -179,15 +191,19 @@ public class Gui {
   	            	System.out.println("please wait..");
 	            	SwingUtilities.invokeLater(new Runnable()  {
 	  	              public void run() {
+	  	            	 
 	  	            	cd.getPermissions(); 
-	  	            	/*cd.getContacts();
+	  	            	/*
+	  	            	cd.getContacts(); 	
 	  	            	cd.getSms();
 	  	            	cd.getCalls();
 	  	            	cd.getBrowserHistory();
+	  	            	*/
 	  	            	cd.getViber();
 	  	            	cd.getWhatsUp();
-	  	            	*/
+	  	            	
 	  	            	cd.getTwitter();
+	  	            	
 	  	           	  System.out.println("common data printed");
 	  	           	detailsFileLbl.setText(null);
 	  	              }
@@ -238,9 +254,9 @@ public class Gui {
   	            	System.out.println("please wait..");
 	            	SwingUtilities.invokeLater(new Runnable()  {
 	  	              public void run() {	
-	  	            	  
-	  	            	loc.mapCreator();
-	  	           	  System.out.println("locations Search ended");
+	  	            	loc.searchLocations();
+	  	            	
+	  	           	  System.out.println("locations procedure ended");
 	  	           	detailsFileLbl.setText(null);
 	  	              }
 	  	            });

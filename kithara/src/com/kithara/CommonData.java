@@ -21,7 +21,7 @@ public class CommonData {
 	public String[][] arr;
 	public String[][] arr2;
 	public static JScrollPane scroller;
-
+	public static String tableID[];
 	
 	public void getPermissions(){
 		
@@ -670,7 +670,7 @@ public class CommonData {
 			 for each userID that has used the device there is a database "userID.db" with statuses-table
 			 * 
 			 */
-			String tableID[];
+			
 			int ui = 0; String line; int j = 0;					
 
 			//find how many userID.db exists
@@ -764,6 +764,8 @@ public class CommonData {
 						   System.out.println(tableID[l]);
 					}
 				//--	
+
+				//--	
 				ResultSet rs = stat.executeQuery("select * from twitter;");
 					while (rs.next()) {//put them in the table
 						arr2[i][0] = String.valueOf(i+1);
@@ -797,8 +799,29 @@ public class CommonData {
 					Gui.twitterPanel.setVisible(true);
 					Gui.twitterPanel.updateUI();
 					
+			        rs.close();
+			        rs1.close();
+			        conn.close();
+			   
 			}catch(Exception ec){
-				System.out.println("errorWhatsUp!");
+				System.out.println("errorTwitter!");
+			}
+			
+			try {//tmpTwitter ---- holds userIds that send message from the device
+				Connection conn2 = DriverManager.getConnection("jdbc:sqlite:"+projectPath+"locations.db");			
+				Statement statTmp = conn2.createStatement();
+				statTmp.executeUpdate("drop table if exists tmpTwitter;");
+				statTmp.executeUpdate("create table tmpTwitter (id);");
+				String sql;
+				for (int l = 0; l < tableID.length; l++) {
+					sql = "INSERT INTO tmpTwitter VALUES ('"+tableID[l]+"');";
+					statTmp .executeUpdate(sql); 
+					conn2.setAutoCommit(false);
+		        	conn2.commit();	
+				}
+				conn2.close();
+			} catch (Exception e) {
+				System.out.println("erroTMP!");
 			}
 			
 		}

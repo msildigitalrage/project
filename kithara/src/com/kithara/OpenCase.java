@@ -66,9 +66,14 @@ public class OpenCase {
 			    LoadImage.where_log=log;
 			    Umount.mountPath=mountPath;
 			    CommonData.mountPath= mountPath;
+			    Locations.mountPath= mountPath;
+			    Timeline.mountPath=mountPath;
+			    Timeline.projectPath=log.replaceAll("log.txt", ""); 
 			    HashCalculate.head= mountPath;// take path to use it in HashCalculate
 				HashCalculate.caseName = log.replaceAll("log.txt", ""); 
 			    CommonData.projectPath = log.replaceAll("log.txt", "");
+			    Locations.projectPath = log.replaceAll("log.txt", "");
+			    
 	   	      }
 	   	      else{
 				JOptionPane.showMessageDialog(null, "this file it is not an image file or the file system you choose is wrong");

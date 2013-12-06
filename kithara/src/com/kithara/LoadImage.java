@@ -193,7 +193,10 @@ public class LoadImage  {
     	Umount.mountPath= mount_path;
     	CommonData.mountPath=mount_path;
     	CommonData.projectPath=where_log.replaceAll("log.txt","");
-    	
+    	Locations.mountPath=mount_path;
+    	Locations.projectPath=where_log.replaceAll("log.txt","");
+    	Timeline.mountPath=mount_path;
+    	Timeline.projectPath=where_log.replaceAll("log.txt","");
 	
 			if(filesystem1==null || mountFile.equals("")){
 							
@@ -257,7 +260,7 @@ public class LoadImage  {
     }
     
     
-    public String getSelectedButtonText(ButtonGroup buttonGroup) {
+    public static String getSelectedButtonText(ButtonGroup buttonGroup) {
         for (Enumeration<AbstractButton> buttons = buttonGroup.getElements(); buttons.hasMoreElements();) {
             AbstractButton button = buttons.nextElement();
 

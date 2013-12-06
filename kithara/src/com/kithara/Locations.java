@@ -3,8 +3,131 @@ package com.kithara;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 public class Locations {
+	public static String mountPath;
+	public static String projectPath;
+	
+	public void searchLocations(){
+		
+		try{
+			  Process p2= Runtime.getRuntime().exec( "sudo chmod -R 777 "+mountPath);
+			  p2.waitFor();
+		  }
+		  catch(IOException | InterruptedException e1){
+			  System.out.println("sudo chmod -R 777 problem");
+		  }
+			System.out.println(mountPath);
+			System.out.println(projectPath);
+
+		try {			
+			//Connection with Database Locations
+			Class.forName("org.sqlite.JDBC");
+			Connection conLocations = DriverManager.getConnection("jdbc:sqlite:"+projectPath+"locations.db");
+			Statement statementL =conLocations.createStatement();
+			statementL.executeUpdate("drop table if exists myLocations;");
+			statementL.executeUpdate("create table myLocations (id,timestamp,latitude,longitude,app,event);");
+			System.out.println("Connection Succesful");
+			
+			//Connection with Database CommonData	
+			Connection conCommonData = DriverManager.getConnection("jdbc:sqlite:"+projectPath+"commonData.db");
+			Statement statementC = conCommonData.createStatement();
+			
+			//Start Collector
+			//init
+			int cv = 0;
+			String timestamp,latitude,longitude,app,event;
+			String sql;
+			//---Viber
+			ResultSet rsViber = statementC.executeQuery("SELECT timestamp,latitude,longitude,interlocutor,message,type FROM viber WHERE latitude !='0' AND type='1'");
+			app = "Viber";
+			while (rsViber.next()) {
+				cv++;
+				timestamp = rsViber.getString("timestamp");
+				latitude=rsViber.getString("latitude");
+				longitude=rsViber.getString("longitude");
+				event = "Communicated with " +rsViber.getString("interlocutor") + ". Message of the event " +rsViber.getString("message")+ ".";
+				//System.out.println(cv+". "+ timestamp + " " + latitude + "|" + longitude + " Application: Twitter, event: " + event);
+				
+				sql= "INSERT INTO myLocations VALUES ("+cv+",\'"+timestamp+"\',\'"+latitude+"\',\'"+longitude+"\',\'"+app+"\',\'"+event+"\');";
+				statementL.executeUpdate(sql);
+				conLocations.setAutoCommit(false);
+			    conLocations.commit();
+			}
+			//WhatsUp
+			ResultSet rsWhatsUp = statementC.executeQuery("SELECT contactWith,whoSend,timeStamp,latitude,longitude FROM whatsUp WHERE latitude !='0.0' AND whoSend='Sent'");
+			app = "Whats Up";
+			while (rsWhatsUp.next()) {
+				cv++;
+				timestamp = rsWhatsUp.getString("timestamp");
+				latitude=rsWhatsUp.getString("latitude");
+				longitude=rsWhatsUp.getString("longitude");
+				event = "Communicated with " +rsWhatsUp.getString("contactWith");
+				//System.out.println(cv+". "+ timestamp + " " + latitude + "|" + longitude + " Application: WhatsUp, event: " + event);
+				
+				sql= "INSERT INTO myLocations VALUES ("+cv+",\'"+timestamp+"\',\'"+latitude+"\',\'"+longitude+"\',\'"+app+"\',\'"+event+"\');";
+				statementL.executeUpdate(sql);
+				conLocations.setAutoCommit(false);
+			    conLocations.commit();
+			}
+			//twitter
+			//readtmpTwitter, find ids that send position from device
+			 ResultSet rs = statementL.executeQuery("select * from tmpTwitter;");
+			 String []tmpIDS = null; int c = 0;
+			 String t = null;
+			 while(rs.next()){			 
+				 t = rs.getString("id");
+				 //System.out.println(t);
+				 c++;
+			 }
+			 tmpIDS = new String [c];
+			 rs = statementL.executeQuery("select * from tmpTwitter;");
+			 int b = c-1;
+			 c--;
+			 while(rs.next()){
+				 t = rs.getString("id");
+				 //System.out.println(t + c);
+				 tmpIDS [c] = t;
+				 System.out.println(tmpIDS[c]+" "+c);
+				 c--;
+			 }
+			
+			 for (int v = 0; v < tmpIDS.length; v++) {
+				 //System.out.println(b+ "" +v);
+				 ResultSet rstwitter = statementC.executeQuery("SELECT author_id,content,created,latitude,longitude FROM twitter WHERE latitude !='null' AND author_id ='"+tmpIDS [v]+"'");
+				 System.out.println(tmpIDS [v]);		
+
+			app = "Twitter";
+
+			while (rsWhatsUp.next()) {
+				cv++;
+				timestamp = rstwitter.getString("created");
+				latitude=rstwitter.getString("latitude");
+				longitude=rstwitter.getString("longitude");
+				event = "Message Sent " +rstwitter.getString("content");
+				//System.out.println(cv+". "+ timestamp + " " + latitude + "|" + longitude + " Application: Twitter, event: " + event);
+				//----------need to fix the ids
+
+				sql= "INSERT INTO myLocations VALUES ("+cv+",\'"+timestamp+"\',\'"+latitude+"\',\'"+longitude+"\',\'"+app+"\',\'"+event+"\');";
+				statementL.executeUpdate(sql);
+				conLocations.setAutoCommit(false);
+			    conLocations.commit();
+			}
+				}
+			//close DB's connection
+			conCommonData.close();
+			conLocations.close();
+		} catch (Exception e) {
+			System.out.println("Connection with DB failed");
+			// TODO: handle exception
+		}
+		
+		mapCreator();
+	}
 public void mapCreator() {		
 		
 		//ypothetic positions
@@ -113,8 +236,8 @@ public void mapCreator() {
 		    writer.close(); //make sure you close the writer object 
 			
 		   //temp open map.html
-		   Runtime.getRuntime().exec("google-chrome /home/iceman/Project/MapCreator/map.html");
-		   Runtime.getRuntime().exec("gedit /home/iceman/Project/MapCreator/map.html");
+		   //Runtime.getRuntime().exec("google-chrome /home/iceman/Project/MapCreator/map.html");
+		   //Runtime.getRuntime().exec("gedit /home/iceman/Project/MapCreator/map.html");
 		} catch (IOException e) {
 			System.out.println("Something Went Wrong..");
 			e.printStackTrace();
