@@ -17,11 +17,12 @@ public class Umount {
 			  p2.waitFor();
 					  Gui.unloadAnImage.setEnabled(false);
 					  Gui.loadImage.setEnabled(true);
+					  Gui.report.setEnabled(true);
 					  TreeView.fileTree.setModel(null);
 					  LoadImage.loadedImage=false;
 			   	      Gui.commonEvidences.setEnabled(false);
 			   	      Gui.hashes.setEnabled(false);
-			   	      Gui.findLocations.setEnabled(false);
+			   	      Gui.routeMap.setEnabled(false);
 				  try{
 					  
 					  Process p= Runtime.getRuntime().exec( "sudo rmdir "+mountPath);

@@ -3,6 +3,7 @@ package com.kithara;
 
 import java.awt.Dimension;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.Connection;
@@ -11,6 +12,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+
+import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
@@ -22,7 +25,8 @@ public class CommonData {
 	public String[][] arr2;
 	public static JScrollPane scroller;
 	public static String tableID[];
-	
+	String[] arrayOfSKfold;
+
 	public void getPermissions(){
 		
 		//change mode of the mount file in order the user can access it	
@@ -843,6 +847,110 @@ public class CommonData {
 				Dimension screenSize = Gui.mainFrame.getBounds().getSize();
 				scroller.setPreferredSize(new Dimension(screenSize.width, (screenSize.height/4)-20));
 				
+			}
+			
+			
+			
+			
+			public void getSkype(){
+				
+				
+				final File folder = new File(mountPath+"/data/com.skype.raider/files/");
+				listFilesForFolder(folder);
+				for(int k=0; k<arrayOfSKfold.length; k++){
+					System.out.println(arrayOfSKfold[k]);
+				}
+				
+			
+				try{
+					
+					
+					
+					Connection conn2 = DriverManager.getConnection("jdbc:sqlite:"+projectPath+"commonData.db");
+					Statement stat2=conn2.createStatement();
+					stat2.executeUpdate("drop table if exists skype;");
+					stat2.executeUpdate("create table skype (id,author,interlocutor,timestamp,date,message);");
+
+					for(int k=0; k<arrayOfSKfold.length; k++){
+						
+					Class.forName("org.sqlite.JDBC");
+					Connection conn = DriverManager.getConnection("jdbc:sqlite:"+mountPath+"/data/com.skype.raider/files/"+arrayOfSKfold[k]+"/main.db");
+					Statement stat = conn.createStatement();
+			        
+			      
+					ResultSet rs = stat.executeQuery("select * from Messages;");
+					
+					while(rs.next()){
+						
+						String from,to,message,sql;
+						String id;
+						long date;
+						
+						id=rs.getString("id");
+						System.out.println(id);
+						from = rs.getString("author");
+						to = rs.getString("dialog_partner");
+						message=rs.getString("body_xml");
+						
+						date = rs.getLong("timestamp");
+						java.util.Date time=new java.util.Date((long)date);
+						
+					
+						
+						
+						if (message!=null){
+			        		message =message.replaceAll("'", "''");
+			        	}	
+					
+						
+									
+						sql= "INSERT INTO skype VALUES ("+id+",\'"+from+"\',\'"+to+"\',\'"+date+"\',\'"+time+"\',\'"+message+"\');";
+						stat2.executeUpdate(sql);
+						conn2.setAutoCommit(false);
+					    conn2.commit();
+					    
+					}
+					rs.close();
+					conn.close();
+			        conn2.close();
+					}
+								
+				}
+				catch(ClassNotFoundException | SQLException e){
+					System.out.println("poutsa");
+				}
+				
+				
+				
+				
+				
+				
+			}
+			
+			
+			public void listFilesForFolder(final File folder) {
+				int i=0;
+			    for (final File fileEntry : folder.listFiles()) {
+			        if (fileEntry.isDirectory()) {
+			        	String name=fileEntry.getName();
+			        	if(!name.equals("shared_httpfe")){
+			        	i++;
+			        	}
+			        } 
+			    }
+			    int j=0;
+			    arrayOfSKfold= new String[i];
+			    String name;
+			    for (final File fileEntry : folder.listFiles()) {
+			    	
+			        if (fileEntry.isDirectory()) {
+			        	name=fileEntry.getName();
+			        	if(!name.equals("shared_httpfe")){
+			        	arrayOfSKfold[j]=fileEntry.getName();
+			        	j++;
+			        	}
+			        } 
+			    }
 			}
 		
 		

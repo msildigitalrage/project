@@ -33,7 +33,7 @@ class DatePicker {
                                 });
                         if (x < 7) {
                                 button[x].setText(header[x]);
-                                button[x].setForeground(Color.red);
+                                button[x].setForeground(Color.green);
                         }
                         p1.add(button[x]);
                 }

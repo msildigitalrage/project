@@ -69,6 +69,8 @@ public class OpenCase {
 			    Locations.mountPath= mountPath;
 			    Timeline.mountPath=mountPath;
 			    Timeline.projectPath=log.replaceAll("log.txt", ""); 
+			    Report.mountPath=mountPath;
+			    Report.projectPath=log.replaceAll("log.txt", ""); 
 			    HashCalculate.head= mountPath;// take path to use it in HashCalculate
 				HashCalculate.caseName = log.replaceAll("log.txt", ""); 
 			    CommonData.projectPath = log.replaceAll("log.txt", "");
@@ -83,8 +85,9 @@ public class OpenCase {
 	   	      Gui.hashes.setEnabled(true);
 	   	      Gui.unloadAnImage.setEnabled(true);
 	   	      Gui.loadImage.setEnabled(false);
+	   	      Gui.report.setEnabled(true);
 	   	      LoadImage.loadedImage= true;
-	   	      Gui.findLocations.setEnabled(true);
+	   	      Gui.routeMap.setEnabled(true);
 			  }
 			  catch(IOException | InterruptedException e1){
 			  }

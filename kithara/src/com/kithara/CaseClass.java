@@ -97,6 +97,7 @@ public class CaseClass {
 		            		Gui.closeCase.setEnabled(true);
 		            		Gui.newCase.setEnabled(false);
 		            		Gui.openCase.setEnabled(false);
+		            		Gui.report.setEnabled(true);
 		            	}
 		                
 		            }

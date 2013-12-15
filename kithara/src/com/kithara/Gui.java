@@ -29,6 +29,7 @@ public class Gui {
 	public static JMenuItem closeCase = new JMenuItem("Close Case");
 	public static JMenuItem loadImage = new JMenuItem("Add Image (.dd)");
 	public static JMenuItem unloadAnImage = new JMenuItem("Remove Image");
+	public static JMenuItem report = new JMenuItem("Report");
 	final JMenuItem exitClose = new JMenuItem("Exit");
 	public static JTabbedPane botPanel = new JTabbedPane();
 	public static JMenu evidences = new JMenu("Evidences");
@@ -42,13 +43,14 @@ public class Gui {
 	public static JPanel viberPanel = new JPanel();
 	public static JPanel whatsUpPanel = new JPanel();
 	public static JPanel twitterPanel = new JPanel();
+	public static JPanel skypePanel = new JPanel();
 	public static JTextArea logText= new JTextArea();
 	public static JMenuItem commonEvidences = new JMenuItem("Common Evidences");
 	public static JMenuItem hashes = new JMenuItem("Calculate & Export MD5 Hashes");
 	//Locations Menu
 	public static JMenu Locations = new JMenu("Locations");
 	public static JMenu timeline = new JMenu("Timeline");
-	public static JMenuItem findLocations = new JMenuItem("Find Locations");
+	public static JMenuItem routeMap = new JMenuItem("Create Map");
 	public static JMenuItem createtimeline = new JMenuItem("create timeline");
 	//
 	public static JPanel paginationPanel = new JPanel();
@@ -78,6 +80,7 @@ public class Gui {
 			botPanel.addTab("calls", calls);
 			botPanel.addTab("browser history", browserHistory);
 			botPanel.addTab("Viber", viberPanel);
+			botPanel.addTab("Skype", skypePanel);
 			botPanel.addTab("Whats'Up", whatsUpPanel);
 			botPanel.addTab("Twitter", twitterPanel);
 				contacts.setBackground(Color.WHITE);
@@ -86,7 +89,8 @@ public class Gui {
 				browserHistory.setBackground(Color.WHITE);
 				viberPanel.setBackground(Color.WHITE);
 				whatsUpPanel.setBackground(Color.WHITE);
-				twitterPanel.setBackground(Color.WHITE);				
+				twitterPanel.setBackground(Color.WHITE);
+				skypePanel.setBackground(Color.WHITE);
 		
 				botPanel.setForegroundAt(0,new Color(100));
 				botPanel.setForegroundAt(1,new Color(100));
@@ -108,6 +112,7 @@ public class Gui {
 			loadImage.setEnabled(false);
 			unloadAnImage.setEnabled(false);
 			closeCase.setEnabled(false);
+			report.setEnabled(false);
 	        newCase.addActionListener(new ActionListener() {
 	            public void actionPerformed(ActionEvent event) {		
 	            	CaseClass caseClass = new CaseClass();
@@ -134,6 +139,7 @@ public class Gui {
 	            	}
 	            	loadImage.setEnabled(false);
 	            	closeCase.setEnabled(false);
+	            	report.setEnabled(false);
 	            	newCase.setEnabled(true);
 	            	openCase.setEnabled(true);
 	            	sms.remove(CommonData.scroller);
@@ -163,6 +169,25 @@ public class Gui {
 		                System.exit(0);
 		            }
 		        });
+		        
+		        report.addActionListener(new ActionListener() {
+		            public void actionPerformed(ActionEvent event) {
+		            	final Report rp = new Report();
+		            	detailsFileLbl.setText("please wait.. (may take some time)");
+	  	            	System.out.println("please wait..");
+		            	SwingUtilities.invokeLater(new Runnable()  {
+		  	              public void run() {
+		  	            	 
+		  	            	rp.makeReport(); 
+
+		  	            	
+		  	           	  System.out.println("common data printed");
+		  	           	detailsFileLbl.setText(null);
+		  	              }
+		  	            });
+		            }
+		        });
+		        	     
 		        	             
 			file.add(newCase);
 			file.add(openCase);
@@ -170,6 +195,8 @@ public class Gui {
 			file.addSeparator();
 			file.add(loadImage);
 			file.add(unloadAnImage);
+			file.addSeparator();
+			file.add(report);
 			file.addSeparator();
 			file.add(exitClose);
 			menuBar.add(file);
@@ -193,16 +220,14 @@ public class Gui {
 	  	              public void run() {
 	  	            	 
 	  	            	cd.getPermissions(); 
-	  	            	/*
 	  	            	cd.getContacts(); 	
 	  	            	cd.getSms();
 	  	            	cd.getCalls();
 	  	            	cd.getBrowserHistory();
-	  	            	*/
 	  	            	cd.getViber();
 	  	            	cd.getWhatsUp();
-	  	            	
 	  	            	cd.getTwitter();
+	  	            	cd.getSkype();
 	  	            	
 	  	           	  System.out.println("common data printed");
 	  	           	detailsFileLbl.setText(null);
@@ -231,8 +256,8 @@ public class Gui {
 
 			
 			//---------Locations--------------
-			findLocations.setEnabled(false);
-			Locations.add(findLocations);
+			routeMap.setEnabled(false);
+			Locations.add(routeMap);
 			menuBar.add(Locations);
 			timeline.add(createtimeline);
 			menuBar.add(timeline);
@@ -247,15 +272,14 @@ public class Gui {
 						}
 					});
 			
-			findLocations.addActionListener(new ActionListener() {
+			routeMap.addActionListener(new ActionListener() {
 	            public void actionPerformed(ActionEvent event) {		
 	            	final Locations loc = new Locations();
 	            	detailsFileLbl.setText("please wait.. (may take some time)");
   	            	System.out.println("please wait..");
 	            	SwingUtilities.invokeLater(new Runnable()  {
 	  	              public void run() {	
-	  	            	loc.searchLocations();
-	  	            	
+	  	            	loc.mapOptions();
 	  	           	  System.out.println("locations procedure ended");
 	  	           	detailsFileLbl.setText(null);
 	  	              }
@@ -264,7 +288,7 @@ public class Gui {
 	        });	
 			
 			//Help
-			JMenu help = new JMenu("Help");
+		JMenu help = new JMenu("Help");
 			JMenuItem about = new JMenuItem("about");
 			help.add(about);
 			menuBar.add(help);

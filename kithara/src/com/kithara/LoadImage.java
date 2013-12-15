@@ -23,7 +23,7 @@ public class LoadImage  {
     	
     	
     	
-        JLabel label = new JLabel("Path mounted:");;
+        JLabel label = new JLabel("Path mounted:");
         final JTextField path = new JTextField();
         final ButtonGroup fileSystem = new ButtonGroup();
         JRadioButton vfatBox = new JRadioButton("ext3");
@@ -197,7 +197,8 @@ public class LoadImage  {
     	Locations.projectPath=where_log.replaceAll("log.txt","");
     	Timeline.mountPath=mount_path;
     	Timeline.projectPath=where_log.replaceAll("log.txt","");
-	
+    	Report.mountPath=mount_path;
+    	Report.projectPath=where_log.replaceAll("log.txt","");
 			if(filesystem1==null || mountFile.equals("")){
 							
 			JOptionPane.showMessageDialog(null, "you have to fill  mounted file and choose file system");
@@ -243,7 +244,7 @@ public class LoadImage  {
 			   	      loadedImage= true;
 			   	      Gui.commonEvidences.setEnabled(true);
 			   	      Gui.hashes.setEnabled(true);
-			   	      Gui.findLocations.setEnabled(true);
+			   	      Gui.routeMap.setEnabled(true);
 				}
 				else{
 					JOptionPane.showMessageDialog(null, "this file it is not an image file or the file system you choose is wrong");
