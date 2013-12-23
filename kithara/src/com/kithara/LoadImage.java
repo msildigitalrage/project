@@ -195,6 +195,8 @@ public class LoadImage  {
     	CommonData.projectPath=where_log.replaceAll("log.txt","");
     	Locations.mountPath=mount_path;
     	Locations.projectPath=where_log.replaceAll("log.txt","");
+    	AreasLocations.mountPath=mount_path;
+    	AreasLocations.projectPath=where_log.replaceAll("log.txt","");
     	Timeline.mountPath=mount_path;
     	Timeline.projectPath=where_log.replaceAll("log.txt","");
     	Report.mountPath=mount_path;

@@ -3,6 +3,7 @@ package com.kithara;
 import static javax.swing.GroupLayout.Alignment.BASELINE;
 import static javax.swing.GroupLayout.Alignment.LEADING;
 
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -11,7 +12,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -26,6 +26,8 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 public class Locations {
@@ -186,7 +188,6 @@ public class Locations {
 			System.out.println("Connection with DB failed");
 			// TODO: handle exception
 		}
-		//mapOptions();
 
 	}
 	public void mapOptions(){
@@ -218,8 +219,8 @@ public class Locations {
 		buttonGroup.add(specificRadioButton);
         final JTextField fromTxt = new JTextField("",20);
         final JTextField toTxt = new JTextField("",20);
-        JButton ok = new JButton("ok");
-        
+        JButton ok = new JButton("Create");
+        JButton viewTableLoc = new JButton("List");
         from.setEnabled(false);
         to.setEnabled(false);
         fromTxt.setEnabled(false);
@@ -242,10 +243,11 @@ public class Locations {
                     .addComponent(from)
                     .addComponent(to)
                     .addComponent(ok)
+                    .addComponent(viewTableLoc)
                     .addComponent(cancel))
             );
             
-            layout.linkSize(SwingConstants.HORIZONTAL,from,to,ok,cancel);
+            layout.linkSize(SwingConstants.HORIZONTAL,from,to,ok,viewTableLoc,cancel);
      
             layout.setVerticalGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(BASELINE)
@@ -256,6 +258,8 @@ public class Locations {
                 	.addComponent(specificRadioButton)	
                 	.addComponent(toTxt)	
                     .addComponent(to))
+                .addGroup(layout.createParallelGroup(BASELINE)
+                	.addComponent(viewTableLoc))
                 .addGroup(layout.createParallelGroup(BASELINE)
                 	.addComponent(ok))
                 .addGroup(layout.createParallelGroup(BASELINE)
@@ -285,23 +289,43 @@ public class Locations {
 					System.out.println("Full Map");
 					int j = 1;
 				mapCreator(j,null,null);//create map in HTML format, requires Internet access to view it,while uses Google Maps API
-				
 				}
 				if(specificRadioButton.isSelected()){
 					System.out.println("Specific Time Area");
 					String start = fromTxt.getText().trim();
 					String end = toTxt.getText().trim();
-					
-					System.out.println(start + " " + end);
+					//System.out.println(start + " " + end);
 					int j = 0;
 				mapCreator(j,start,end);//create map in HTML format, requires Internet access to view it,while uses Google Maps API
-				
 				}
 				frame.setVisible(false);
 				frame.dispose();
 			}
+
 		});
 		
+		viewTableLoc.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(fullRadioButton.isSelected()){
+					//System.out.println("Full Map");
+					int j = 1;
+					viewTableLocations(j,null,null);
+				}
+				if(specificRadioButton.isSelected()){
+					//System.out.println("Specific Time Area");
+					String start = fromTxt.getText().trim();
+					String end = toTxt.getText().trim();
+					
+					//System.out.println(start + " " + end);
+					int j = 0;
+					viewTableLocations(j,start,end);
+				}
+				//frame.setVisible(false);
+				//frame.dispose();
+			}
+		});
 		specificRadioButton.addActionListener(new ActionListener() {
 			
 			@Override
@@ -346,7 +370,94 @@ public class Locations {
 		});
 		
 	}
-    private static long strDateToUnixTimestamp(String dt) {
+    protected void viewTableLocations(int j, String start, String end) {
+    	////----
+    	//init - procedure for selecting time area
+    	String st = start;
+    	String ex = end;
+    	Long startD; 
+    	Long endD;
+    	if(j==0){
+    	String tempTime[];
+    	String tempTime2[];
+    		tempTime=st.split("-");
+    		tempTime2= ex.split("-");
+    		String startTime,endTime;
+    		startTime = tempTime[0]+"/"+tempTime[1]+"/"+tempTime[2]+" 00:00:00 GMT";
+    		endTime = tempTime2[0]+"/"+tempTime2[1]+"/"+tempTime2[2]+" 00:00:00 GMT";
+
+    		startD = strDateToUnixTimestamp(startTime);
+    		endD = strDateToUnixTimestamp(endTime);
+    		endD = endD+999;
+    		st = startD.toString();
+    		ex = endD.toString();
+    	//System.out.println(startD +" "+ endD);
+    	}
+    	/////-----
+    	
+		//System.out.println(start + end);
+		final JFrame fr = new JFrame("Locations");
+		final JPanel panel =  new JPanel();
+		final JTable table;
+		final JScrollPane scrollPane;
+		
+		panel.setLayout( new BorderLayout() );
+		fr.getContentPane().add(panel);
+		
+		//values
+		// Create columns names
+		String columnNames[] = { "id", "time","latitude","longitude","source","event"};
+		// Create some data
+		String[][] arr = null;
+		try{
+			Class.forName("org.sqlite.JDBC");
+			Connection conn = DriverManager.getConnection("jdbc:sqlite:"+projectPath+"locations.db");
+			Statement stat = conn.createStatement();
+			ResultSet rs1;
+			if(j==1){
+				rs1 = stat.executeQuery("SELECT Count(*) AS total FROM myLocations");
+			}else{
+				rs1 = stat.executeQuery("SELECT Count(*) AS total FROM myLocations WHERE timestamp BETWEEN '"+st+"' AND '"+ex+"';");	
+			}
+			int k = rs1.getInt("total");
+			arr= new String[k][6];
+			int i=0;
+			ResultSet rs;
+			if(j==1){//all locations
+				rs = stat.executeQuery("SELECT * FROM myLocations ORDER BY timestamp;");
+			}else{//j=0.. from to
+				rs = stat.executeQuery("SELECT * FROM myLocations WHERE timestamp BETWEEN '"+st+"' AND '"+ex+"';");	
+			}
+			while (rs.next()) {
+				String timestamp,latitude,longitude,app,event;
+				
+				timestamp=rs.getString("timestamp");
+				latitude=rs.getString("latitude");
+				longitude=rs.getString("longitude");
+				app=rs.getString("app");
+				event=rs.getString("event");		
+				arr[i][0]=Integer.toString(i+1);
+				arr[i][1]=timestamp;
+				arr[i][2]=latitude;		
+				arr[i][3]=longitude;
+				arr[i][4]=app;
+				arr[i][5]=event;
+				i++;
+			}
+
+			
+			
+		}catch(Exception e){
+			
+		}
+		table = new JTable( arr, columnNames );
+		scrollPane = new JScrollPane(table);
+		panel.add(scrollPane, BorderLayout.CENTER);
+		fr.setSize( 500, 600 );
+		fr.setVisible(true);
+		
+	}
+	private static long strDateToUnixTimestamp(String dt) {
         DateFormat formatter;
         java.util.Date date = null;
         long unixtime;
@@ -405,7 +516,7 @@ public void mapCreator(int j, String start, String end) {
 			k++;
 		}
 
-		System.out.println("All Positions ->"+k);
+		//System.out.println("All Positions ->"+k);
 	if(k!=0){
 		//init
 		double[] lat = new double [k];

@@ -51,6 +51,7 @@ public class Gui {
 	public static JMenu Locations = new JMenu("Locations");
 	public static JMenu timeline = new JMenu("Timeline");
 	public static JMenuItem routeMap = new JMenuItem("Create Map");
+	public static JMenuItem areasLocations = new JMenuItem("areas");
 	public static JMenuItem createtimeline = new JMenuItem("create timeline");
 	//
 	public static JPanel paginationPanel = new JPanel();
@@ -258,6 +259,7 @@ public class Gui {
 			//---------Locations--------------
 			routeMap.setEnabled(false);
 			Locations.add(routeMap);
+			Locations.add(areasLocations);
 			menuBar.add(Locations);
 			timeline.add(createtimeline);
 			menuBar.add(timeline);
@@ -281,6 +283,20 @@ public class Gui {
 	  	              public void run() {	
 	  	            	loc.mapOptions();
 	  	           	  System.out.println("locations procedure ended");
+	  	           	detailsFileLbl.setText(null);
+	  	              }
+	  	            });
+	            }
+	        });	
+			areasLocations.addActionListener(new ActionListener() {
+	            public void actionPerformed(ActionEvent event) {		
+	            	final AreasLocations loc = new AreasLocations();
+	            	detailsFileLbl.setText("please wait.. (may take some time)");
+  	            	System.out.println("please wait..");
+	            	SwingUtilities.invokeLater(new Runnable()  {
+	  	              public void run() {	
+	  	            	loc.init();
+	  	           	  System.out.println("Areas procedure ended");
 	  	           	detailsFileLbl.setText(null);
 	  	              }
 	  	            });

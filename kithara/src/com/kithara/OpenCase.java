@@ -67,6 +67,7 @@ public class OpenCase {
 			    Umount.mountPath=mountPath;
 			    CommonData.mountPath= mountPath;
 			    Locations.mountPath= mountPath;
+			    AreasLocations.mountPath= mountPath;
 			    Timeline.mountPath=mountPath;
 			    Timeline.projectPath=log.replaceAll("log.txt", ""); 
 			    Report.mountPath=mountPath;
@@ -75,6 +76,7 @@ public class OpenCase {
 				HashCalculate.caseName = log.replaceAll("log.txt", ""); 
 			    CommonData.projectPath = log.replaceAll("log.txt", "");
 			    Locations.projectPath = log.replaceAll("log.txt", "");
+			    AreasLocations.projectPath = log.replaceAll("log.txt", "");
 			    
 	   	      }
 	   	      else{
