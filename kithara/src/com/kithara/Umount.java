@@ -23,6 +23,7 @@ public class Umount {
 			   	      Gui.commonEvidences.setEnabled(false);
 			   	      Gui.hashes.setEnabled(false);
 			   	      Gui.routeMap.setEnabled(false);
+			   	      Gui.areasLocations.setEnabled(false);
 				  try{
 					  
 					  Process p= Runtime.getRuntime().exec( "sudo rmdir "+mountPath);

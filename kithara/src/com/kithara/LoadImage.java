@@ -247,6 +247,7 @@ public class LoadImage  {
 			   	      Gui.commonEvidences.setEnabled(true);
 			   	      Gui.hashes.setEnabled(true);
 			   	      Gui.routeMap.setEnabled(true);
+			   	      Gui.areasLocations.setEnabled(true);
 				}
 				else{
 					JOptionPane.showMessageDialog(null, "this file it is not an image file or the file system you choose is wrong");

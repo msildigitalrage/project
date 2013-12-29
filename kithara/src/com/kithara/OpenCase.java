@@ -90,6 +90,7 @@ public class OpenCase {
 	   	      Gui.report.setEnabled(true);
 	   	      LoadImage.loadedImage= true;
 	   	      Gui.routeMap.setEnabled(true);
+	   	      Gui.areasLocations.setEnabled(true);
 			  }
 			  catch(IOException | InterruptedException e1){
 			  }
