@@ -1,2 +1,0 @@
-#!/bin/
-sudo find /mnt_userdata.dd_makos -type f -print0 | xargs -0 md5sum >> /home/iceman/git/kithara/kithara/makos/Hashes.md5
